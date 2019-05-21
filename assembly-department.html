@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assembly Department</title>
+  <style type="text/css">
+    body{
+      padding: 0px;
+      margin: 0px;
+      overflow: hidden;
+      cursor: -moz-zoom-in; 
+      cursor: -webkit-zoom-in; 
+      cursor: zoom-in;
+      background: #4F8ABA;
+    }
+
+    body.zoomed{
+      cursor: -moz-zoom-out; 
+      cursor: -webkit-zoom-out; 
+      cursor: zoom-out;
+    }
+
+    .zoomable{
+      transform-origin: top left;
+      display: inline-block;
+      position: absolute;
+
+    }
+
+
+  </style>
+  <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+    $( function(){
+
+        var w = $(window).width()/$('.zoomable').width();
+        var h = $(window).height()/$('.zoomable').height();
+        
+        var scale = Math.max(w,h);
+        var zoomed = false;
+        var zoomObject = {zoom:1};
+
+
+        this.zoomTo = function(x,y,zoomTo){
+          
+
+          x = $(window).width()/2 - x*zoomTo;
+          y = $(window).height()/2 - y*zoomTo;
+
+          $('.zoomable').animate({left:x,top:y});
+
+          $(zoomObject).animate({zoom:zoomTo},{step:function(now){
+            $('.zoomable').css({transform:"scale("+now+")"});
+          }})
+        }
+
+        this.zoomTo($('.zoomable').width()/2, $('.zoomable').height()/2,scale);
+
+        $('.zoomable').click(function(e){
+          zoomed = !zoomed;
+
+          $('body').removeClass('zoomed');
+          if(zoomed) $('body').addClass('zoomed');
+
+          var zoomTo = 2;
+
+          var focalX = $('.zoomable').width()/2;
+          var focalY = $('.zoomable').height()/2;
+
+          if(zoomed){
+            //captures the point we're actually zooming in to
+            focalX = (e.pageX - $('.zoomable').offset().left) * 1/zoomObject.zoom;
+            focalY = (e.pageY - $('.zoomable').offset().top) * 1/zoomObject.zoom;
+          } else {
+
+            var w = $(window).width()/$('.zoomable').width();
+            var h = $(window).height()/$('.zoomable').height();
+            var scale = Math.max(w,h);
+            zoomTo = scale;
+          }
+
+
+          this.zoomTo(focalX,focalY,zoomTo)
+
+          
+        }.bind(this));
+
+
+
+
+      });
+  </script>
+</head>
+<body>
+
+<div class='zoomable'>
+  <img src='Assembly_Department_Current_drawing.png'></div>
+</div>
+
+</body>
+</html>
