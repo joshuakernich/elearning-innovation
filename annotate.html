@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Annotator</title>
+  <style type="text/css">
+    body{
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .email{
+      border: 1px solid #ddd;
+      background: white;
+      font-family: Courier;
+      padding: 20px;
+      line-height: 1.5em;
+      color: #555577;
+
+    }
+
+    .highlight{
+      background: #ffdd55;
+    }
+  </style>
+  <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var $pList = $('.email p');
+      $pList.each(function(){
+        var text = $(this).text();
+        var words = text.split(' ');
+
+        var str = '';
+        for(var i in words){
+
+          str += '<span>'+words[i]+(i<words.length-1?' ':'')+'</span>'
+        }
+        $(this).html(str);
+
+      })
+
+      iStartHighlight = 0;
+      iEndHighlight = 0;
+      isDown = false;
+
+      $('.email span').mousedown(function(e){
+        e.preventDefault();
+        isDown = true;
+        iStartHighlight = iEndHighlight = $('.email span').index(this);
+        $(this).addClass("highlight");
+      });
+
+      $('body').mouseup(function(e){
+        isDown = false;
+
+
+        var iMin = Math.min(iStartHighlight,iEndHighlight);
+        var iMax = Math.max(iStartHighlight,iEndHighlight);
+
+
+      });
+
+      $('.email span').mousemove(function(e){
+        if(!isDown) return;
+        e.preventDefault();
+        iEndHighlight = $('.email span').index(this);
+        var $spans = $('.email span');
+
+        var iMin = Math.min(iStartHighlight,iEndHighlight);
+        var iMax = Math.max(iStartHighlight,iEndHighlight);
+
+        for(var i = iMin; i<=iMax; i++){
+          $spans.eq(i).addClass('highlight');
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class='email'>
+<p>To: Robotics Integration Engineer</p>
+<p>From: Carrie, Production Manager</p>
+<p>Date: Today</p>
+<p>Subject: Robots!</p>
+<p>Hello!</p>
+<p>I hope this email finds you well. I ran into Grant the other day, and he told me that you had taken a job at the same company he works for, BestEver Robotics. Congratulations! </p>
+<p>As you know, after college I moved back to Pennsylvania to work in my family’s business, A&P Stamp and Machine, where I am now the production manager. Our company has been in business more than 55 years, and we are looking forward to another 55 years and beyond. My goal is to move our company into the 21st century by integrating robots into our manufacturing process. When Grant told me about your new position, it seemed like a perfect match! </p>
+<p>Let me tell you a little bit about the company. A&P Stamp and Machine primarily manufactures and builds filters for a number of industries: oil & gas, aerospace, construction, and military. Approximately 80% of all required metal components are manufactured in-house through our stamping and machining departments. In rare cases we will do the fabrication of plastic components internally through the machining department; however, we don't currently have any injection molding capability. The remaining 20% of metal parts, as well as all other required components, are externally sourced through the receiving department. Finally, our finishing and assembly departments bring the components together to form the finished product.</p>
+<p>As I mentioned, we want to stay competitive far into the future. We believe robots can help us do that. My father, who still runs the company, is fully on board with this idea; however, he is fearful that the introduction of robots will have a negative impact on our company culture. Our employees are like family. One of our employees has been with the company for 43 years! Once people join A&P Stamp and Machine, most of them never leave again. We have a talented, skilled, and loyal workforce, which is critical to maintaining the satisfaction of our clients. We play a significant role in our community, not only as a solid employer, but as a community citizen. We sponsor several community events throughout the year. We don’t want to disturb our relationship with our employees or cause concern among the larger community.</p>
+<p>In short, we want to improve efficiency, keep our great safety record, and stay competitive well into the future with minimal negative impact. Can you help us with that?</p>
+<p>I look forward to hearing from you.</p>
+<p>Carrie</p>
+  </div>
+</body>
+</html>
