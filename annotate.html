@@ -15,12 +15,39 @@
       padding: 20px;
       line-height: 1.5em;
       color: #555577;
-
+      user-select: none;
     }
 
     .highlight{
       background: #ffdd55;
+      cursor: pointer;
     }
+
+    .pending{
+      background: #ffdd55;
+    }
+
+    span{
+      position: relative;
+    }
+
+    .annotation{
+      padding: 10px;
+      background: #ffdd55;
+      border: 1px solid #ddd;
+      
+      position: absolute;
+      width: 200px;
+      height: 70px;
+      right: 0px;
+      z-index: 1;
+      bottom: 20px;
+      box-sizing: border-box;
+      font-family: Courier;
+      display: none;
+    }
+
+
   </style>
   <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
   <script type="text/javascript">
@@ -39,38 +66,84 @@
 
       })
 
+      var $spans = $('.email span');
+
+      notes = [];
       iStartHighlight = 0;
       iEndHighlight = 0;
       isDown = false;
+      iNoteRecent = 0;
+
 
       $('.email span').mousedown(function(e){
-        e.preventDefault();
+
+        $('.annotation').hide();
+        if(notes.length) notes[iNoteRecent].note = $('.annotation').text();
+
+        if($(this).hasClass('highlight')){
+
+          var iSelect = $spans.index(this);
+
+          for(var i=0; i<notes.length; i++){
+
+            if(iSelect >= notes[i].iMin && iSelect <= notes[i].iMax){
+
+              iNoteRecent = i;
+              var o = $spans.eq(notes[i].iMin).offset();
+              o.top -= 80;
+              
+              $('.annotation').text(notes[i].note);
+              $('.annotation').show();
+              $('.annotation').offset(o);
+              $('.annotation').focus();
+            }
+          }
+          return;
+        }
+
         isDown = true;
         iStartHighlight = iEndHighlight = $('.email span').index(this);
-        $(this).addClass("highlight");
+        $(this).addClass("pending");
+        
       });
 
       $('body').mouseup(function(e){
+        if(!isDown) return;
         isDown = false;
 
 
         var iMin = Math.min(iStartHighlight,iEndHighlight);
         var iMax = Math.max(iStartHighlight,iEndHighlight);
 
+        iNoteRecent = notes.push({iMin:iMin,iMax:iMax,note:""})-1;
 
+        $spans.removeClass('pending');
+        for(var i = iMin; i<=iMax; i++){
+          $spans.eq(i).addClass('highlight');
+        }
+
+        var o = $spans.eq(iMin).offset();
+        o.top -= 80;
+        
+        $('.annotation').text("");
+        $('.annotation').show();
+        $('.annotation').offset(o);
+        $('.annotation').focus();
       });
 
       $('.email span').mousemove(function(e){
         if(!isDown) return;
         e.preventDefault();
         iEndHighlight = $('.email span').index(this);
-        var $spans = $('.email span');
+        
 
         var iMin = Math.min(iStartHighlight,iEndHighlight);
         var iMax = Math.max(iStartHighlight,iEndHighlight);
 
+        $spans.removeClass('pending');
+
         for(var i = iMin; i<=iMax; i++){
-          $spans.eq(i).addClass('highlight');
+          $spans.eq(i).addClass('pending');
         }
       });
     });
@@ -91,5 +164,6 @@
 <p>I look forward to hearing from you.</p>
 <p>Carrie</p>
   </div>
+  <div contenteditable class='annotation'></div>
 </body>
 </html>
