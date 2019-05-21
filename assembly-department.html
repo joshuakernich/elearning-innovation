@@ -35,7 +35,8 @@
         var w = $(window).width()/$('.zoomable').width();
         var h = $(window).height()/$('.zoomable').height();
         
-        var scale = Math.max(w,h);
+        var scale = Math.min(w,h);
+
         var zoomed = false;
         var zoomObject = {zoom:1};
 
@@ -74,7 +75,7 @@
 
             var w = $(window).width()/$('.zoomable').width();
             var h = $(window).height()/$('.zoomable').height();
-            var scale = Math.max(w,h);
+            var scale = Math.min(w,h);
             zoomTo = scale;
           }
 
