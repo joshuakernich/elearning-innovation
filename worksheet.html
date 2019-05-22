@@ -15,8 +15,12 @@
 
     label{
       display: block;
-      padding: 5px;
-      background: #ddd;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      padding-bottom: 0px;
+      color: #777;
     }
     textarea{
       display: block;
@@ -27,6 +31,8 @@
       font-family: inherit;
       background: white;
       resize: none;
+      border-top: none;
+      margin-bottom: 5px;
     }
 
     textarea:disabled{
@@ -38,6 +44,8 @@
       margin: 0px;
       padding: 0px;
       font-weight: normal;
+      margin-bottom: 5px;
+      margin-left: 5px;
     }
 
     h2{
@@ -46,13 +54,18 @@
     }
 
 
-
+    img{
+      width: 200px;
+      margin-bottom: 20px;
+      position: relative;
+    }
 
 
   </style>
   <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
   <script type="text/javascript">
     var fields = [
+      {img:"best-ever-robotics.png"},
       {h1:"Automation Worksheet for Project Assessment"},
       {t:"Project",d:"A&P Stamp and Machine - Assembly Department"},
       {h1:"Project Management"},
@@ -60,8 +73,8 @@
       {t:"Pros"},
       {t:"Cons"},
       {t:"What is the overall budget required for this project?",d:"$350,000"},
-      {h2:"What is the timeline for each of the following elements of the project?<br><br>A&P Stamp and Machine has specified that the timeline for this project is flexible, so scheduling is not a significant factor at this time.Quotation"},
-      {t:"Quotation",d:"NA"},
+      {h2:"What is the timeline for each of the following elements of the project?"},
+      {t:"Quotation",d:"A&P Stamp and Machine has specified that the timeline for this project is flexible, so scheduling is not a significant factor at this time."},
       {t:"Engineering and design",d:"NA"},
       {t:"Review",d:"NA"},
       {t:"Acquisition",d:"NA"},
@@ -132,13 +145,14 @@
           str += '<h1>'+fields[i].h1+'</h1>';
         } else if(fields[i].h2){
           str += '<h2>'+fields[i].h2+'</h2>';
+        } else if(fields[i].img){
+          str += '<img src="'+fields[i].img+'"/>';
         }else {
           str += '<label>'+fields[i].t+'</label>';
           if(fields[i].d) str += '<textarea disabled>'+fields[i].d+'</textarea>';
           else str += '<textarea></textarea>';
         } 
 
-        str += "<br>";
       }
 
       $("body").html(str);
