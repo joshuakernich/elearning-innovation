@@ -10,7 +10,8 @@
       cursor: -moz-zoom-in; 
       cursor: -webkit-zoom-in; 
       cursor: zoom-in;
-      background: #4F8ABA;
+      background: #006699;
+      background-image: url("./blueprint-grid.png");
     }
 
     body.zoomed{
@@ -62,7 +63,7 @@
           $('body').removeClass('zoomed');
           if(zoomed) $('body').addClass('zoomed');
 
-          var zoomTo = 1.5;
+          var zoomTo = 1;
 
           var focalX = $('.zoomable').width()/2;
           var focalY = $('.zoomable').height()/2;
@@ -94,7 +95,7 @@
 <body>
 
 <div class='zoomable'>
-  <img src='plant-layout.png'></div>
+  <img src='assembly-department.png'></div>
 </div>
 
 </body>
