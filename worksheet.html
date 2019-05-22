@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    body{
+      width: 600px;
+      margin: auto;
+      font-family: Courier;
+      color: #555;
+      font-size: 12px;
+      background: #eee;
+      padding: 50px;
+    }
+
+    label{
+      display: block;
+      padding: 5px;
+      background: #ddd;
+    }
+    textarea{
+      display: block;
+      width: 100%;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: inherit;
+      background: white;
+      resize: none;
+    }
+
+    textarea:disabled{
+      color: #999;
+    }
+
+    h1,h2{
+      font-size: 20px;
+      margin: 0px;
+      padding: 0px;
+      font-weight: normal;
+    }
+
+    h2{
+      font-size: inherit;
+      color: inherit;
+    }
+
+
+
+
+
+  </style>
+  <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+    var fields = [
+      {h1:"Automation Worksheet for Project Assessment"},
+      {t:"Project",d:"A&P Stamp and Machine - Assembly Department"},
+      {h1:"Project Management"},
+      {h2:"What are the general Pros and Cons for this project?"},
+      {t:"Pros"},
+      {t:"Cons"},
+      {t:"What is the overall budget required for this project?",d:"$350,000"},
+      {h2:"What is the timeline for each of the following elements of the project?<br><br>A&P Stamp and Machine has specified that the timeline for this project is flexible, so scheduling is not a significant factor at this time.Quotation"},
+      {t:"Quotation",d:"NA"},
+      {t:"Engineering and design",d:"NA"},
+      {t:"Review",d:"NA"},
+      {t:"Acquisition",d:"NA"},
+      {t:"Install and commissioning",d:"NA"},
+      {t:"Startup",d:"NA"},
+      {t:"Training",d:"NA"},
+      {t:"Hand-off",d:"NA"},
+      {t:"What are the supplier requirements for this project?",d:"Because this is A&P’s first potential use of robotics, the client has no preference in robot supplier. Further, the client has not imposed any restrictions on product brands or suppliers at this time."},
+      {t:"What are the freight and logistics for this project?",d:"Nothing required by the client. Note that it is likely that if a cell were constructed for this project it would be done onsite at BestEver Robotics first for testing and development then shipped to the client for final install."},
+      {h1:"Part Properties"},
+      {t:"Payload (weight of object(s) robot will handle)"},
+      {t:"Geometry (shape of object(s) robot will handle)"},
+      {t:"Required orientation of robot"},
+      {t:"Material of object(s) robot will handle"},
+      {t:"Temperature of object(s) robot will handle"},
+      {h2:"Surface of object(s)"},
+      {t:"Oil"},
+      {t:"Dirt"},
+      {t:"Porous"},
+      {t:"Ridged/compressible"},
+      {t:"Part variety/category/family groups"},
+      {h1:"Environmental Properties"},
+      {t:"Temperature"},
+      {t:"Noise"},
+      {t:"Visibility/lighting"},
+      {t:"Physical space constraints"},
+      {t:"Fume exhaust"},
+      {t:"Power requirements",d:"Nothing specific"},
+      {t:"Compressed air",d:"Yes"},
+      {t:"Electrical (AC, DC, backup)",d:"110, 220, and 440 AC power"},
+      {t:"Water",d:"No"},
+      {t:"Gas",d:"No"},
+      {h1:"Process Specific Requirements"},
+      {t:"Reach"},
+      {h2:"Throughput/rate"},
+      {t:"Current rate"},
+      {t:"Desired rate",d:"Customer request to be similar to the human average at a minimum"},
+      {t:"Batch size",d:"Variable, dependent on customer order"},
+      {t:"Success rates",d:"No details at this time"},
+      {t:"Uptime",d:"Nothing specific at this time"},
+      {t:"Maintenance",d:"Nothing specific at this time"},
+      {t:"Training",d:"Nothing specific at this time"},
+      {t:"Human robot interaction",d:""},
+      {t:"Certifications",d:"Not applicable"},
+      {h2:"Equipment Interfacing"},
+      {t:"PLC",d:"Drill Press: N/A<br>Press: N/A"},
+      {t:"System inputs and outputs",d:"Not applicable at this stage"},
+      {t:"Network",d:"There is an unused network drop on the building column near bench 4"},
+      {t:"Server",d:"Not Applicable"},
+      {t:"Cloud",d:"Not Applicable"},
+      {h1:"Environmental Health and Safety Considerations"},
+      {t:"Are humans and robots going to interact with each other? In what way?"},
+      {t:"Can you use robot sensing to separate humans and robot?"},
+      {t:"Are there safety benefits for using a robot in this location? What are they?"},
+      {t:"Does this project require process redesign? If so, in what way?"},
+      {h1:"Client/Company Culture"},
+      {t:"Does the client have company culture/employee concerns about integrating robotics? If so, identify them."},
+      {t:"How will the client’s concerns be addressed in this project?"},
+      {t:"What recommendations would you make to help the client introduce robotics into the company culture with minimal disruption through this application?"},
+      {h1:"Conclusion and Analysis"},
+      {t:"Use this space to jot notes and eventually draft your conclusion with your rationale."}
+    ]
+
+    $(function(){
+      str = '';
+      for(var i in fields){
+        if(fields[i].h1){
+          str += '<h1>'+fields[i].h1+'</h1>';
+        } else if(fields[i].h2){
+          str += '<h2>'+fields[i].h2+'</h2>';
+        }else {
+          str += '<label>'+fields[i].t+'</label>';
+          if(fields[i].d) str += '<textarea disabled>'+fields[i].d+'</textarea>';
+          else str += '<textarea></textarea>';
+        } 
+
+        str += "<br>";
+      }
+
+      $("body").html(str);
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
