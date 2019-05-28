@@ -27,24 +27,24 @@
 
     }
 
+    img{
+      display: none;
+    }
+
 
   </style>
   <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
   <script type="text/javascript">
     $( function(){
 
-        var w = $(window).width()/$('.zoomable').width();
-        var h = $(window).height()/$('.zoomable').height();
-        
-        var scale = Math.min(w,h);
-
         var zoomed = false;
         var zoomObject = {zoom:1};
 
+        var type = location.hash.substr(1);
+        $('img.'+type).show();
 
         this.zoomTo = function(x,y,zoomTo){
           
-
           x = $(window).width()/2 - x*zoomTo;
           y = $(window).height()/2 - y*zoomTo;
 
@@ -55,37 +55,43 @@
           }})
         }
 
-        this.zoomTo($('.zoomable').width()/2, $('.zoomable').height()/2,scale);
-
         $('.zoomable').click(function(e){
-          zoomed = !zoomed;
-
-          $('body').removeClass('zoomed');
-          if(zoomed) $('body').addClass('zoomed');
-
-          var zoomTo = 1;
-
-          var focalX = $('.zoomable').width()/2;
-          var focalY = $('.zoomable').height()/2;
-
-          if(zoomed){
+    
+          if(!zoomed){
             //captures the point we're actually zooming in to
+            zoomed = true;
+            $('body').addClass('zoomed');
             focalX = (e.pageX - $('.zoomable').offset().left) * 1/zoomObject.zoom;
             focalY = (e.pageY - $('.zoomable').offset().top) * 1/zoomObject.zoom;
+            this.zoomTo(focalX,focalY,1)
           } else {
-
-            var w = $(window).width()/$('.zoomable').width();
-            var h = $(window).height()/$('.zoomable').height();
-            var scale = Math.min(w,h);
-            zoomTo = scale;
+            this.zoomToShowAll();
           }
 
-
-          this.zoomTo(focalX,focalY,zoomTo)
-
-          
         }.bind(this));
 
+
+        this.zoomToShowAll = function(){
+          zoomed = false;
+          $('body').removeClass('zoomed');
+          var focalX = $('.zoomable').width()/2;
+          var focalY = $('.zoomable').height()/2;
+          var w = $(window).width()/$('.zoomable').width();
+          var h = $(window).height()/$('.zoomable').height();
+          var scale = Math.min(w,h);
+          this.zoomTo(focalX,focalY,scale)
+        }
+
+        //try to initialize until the view is genuinely visible
+        var iInit = setInterval(function(){
+          if($('.zoomable').width()>0){
+            clearInterval(iInit);
+            this.zoomToShowAll();
+
+          }
+          console.log($('.zoomable').width());
+          console.log("interval");
+        }.bind(this),200);
 
 
 
@@ -95,7 +101,10 @@
 <body>
 
 <div class='zoomable'>
-  <img src='assembly-department.png'></div>
+  <img class="plant" src='blueprint-plant.png'>
+  <img class="assembly" src='blueprint-assembly.png'>
+  <img class="stamping" src='blueprint-stamping.png'>
+  <img class="finishing" src='blueprint-finishing.png'>
 </div>
 
 </body>

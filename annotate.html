@@ -2,10 +2,39 @@
 <html>
 <head>
   <title>Annotator</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
   <style type="text/css">
     body{
       padding: 0px;
       margin: 0px;
+      background: #f5f5f5;
+      font-family: Arial;
+      font-size: 16px;
+      color: #333333;
+      line-height: 1.42857;
+    }
+
+    .instructions {
+      padding: 20px;
+      border: 1px solid #ddd;
+      background: #ffcc77;
+      font-family: 'Roboto Slab', serif;
+      padding-left: 60px;
+      position: relative;
+      
+    }
+
+    .instructions:before {
+      content: "";
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-size: 100%;
+      background-image: url("https://ease-production-1.s3.amazonaws.com/learning-path-assets/195/bab2347e2cd3ac9492821f33635e614566854775/lightbulb.png");
     }
 
     .email{
@@ -16,35 +45,96 @@
       line-height: 1.5em;
       color: #555577;
       user-select: none;
+      margin: 20px;
     }
 
     .highlight{
-      background: #ffdd55;
+      background: #ffcc77;
       cursor: pointer;
     }
 
     .pending{
-      background: #ffdd55;
+      background: #ffcc77;
     }
 
     span{
       position: relative;
     }
 
+    .annotation-popup{
+      padding: 5px;
+      background: #ffcc77;
+      border: 1px solid #ddd;
+      position: absolute;
+      z-index: 1;
+
+      display: inline-block;
+      position: absolute;
+      padding-right: 30px;
+      display: none;
+    }
+
+    .annotation-popup button{
+      position: absolute;
+      right: 5px;
+      background: none;
+      width: 20px;
+      height: 20px;
+      outline: none;
+      font-size: 14px;
+      text-align: center;
+      font-weight: bold;
+      color: #777;
+      padding: 0px;
+      border: none;
+      cursor: pointer;
+    }
+
+
+    .annotation-popup button.close{
+      
+      top: 5px;
+    }
+
+
+    .annotation-popup button.trash{
+
+      bottom: 5px;
+
+    }
+
     .annotation{
       padding: 10px;
-      background: #ffdd55;
+      background: white;
       border: 1px solid #ddd;
-      
-      position: absolute;
       width: 200px;
       height: 70px;
-      right: 0px;
-      z-index: 1;
-      bottom: 20px;
       box-sizing: border-box;
       font-family: Courier;
-      display: none;
+      outline: none;
+    }
+
+    label{
+      display: block;
+      padding: 10px;
+      background: white;
+      border: 1px solid #ddd;
+      border-bottom: none;
+      padding-bottom: 0px;
+      color: #777;
+    }
+    textarea{
+      display: block;
+      width: 100%;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: inherit;
+      background: white;
+      resize: none;
+      border-top: none;
+      margin-bottom: 5px;
+      font-size: inherit;
     }
 
 
@@ -75,9 +165,13 @@
       iNoteRecent = 0;
 
 
+      $('.annotation-popup button.close').click(function(){
+        $('.annotation-popup').hide();
+      })
+
       $('.email span').mousedown(function(e){
 
-        $('.annotation').hide();
+        $('.annotation-popup').hide();
         if(notes.length) notes[iNoteRecent].note = $('.annotation').text();
 
         if($(this).hasClass('highlight')){
@@ -90,11 +184,11 @@
 
               iNoteRecent = i;
               var o = $spans.eq(notes[i].iMin).offset();
-              o.top -= 80;
+              o.top -= 90;
               
               $('.annotation').text(notes[i].note);
-              $('.annotation').show();
-              $('.annotation').offset(o);
+              $('.annotation-popup').css({display:"inline-block"});
+              $('.annotation-popup').offset(o);
               $('.annotation').focus();
             }
           }
@@ -123,11 +217,11 @@
         }
 
         var o = $spans.eq(iMin).offset();
-        o.top -= 80;
+        o.top -= 90;
         
         $('.annotation').text("");
-        $('.annotation').show();
-        $('.annotation').offset(o);
+        $('.annotation-popup').css({display:"inline-block"});
+        $('.annotation-popup').offset(o);
         $('.annotation').focus();
       });
 
@@ -140,6 +234,7 @@
         var iMin = Math.min(iStartHighlight,iEndHighlight);
         var iMax = Math.max(iStartHighlight,iEndHighlight);
 
+
         $spans.removeClass('pending');
 
         for(var i = iMin; i<=iMax; i++){
@@ -150,12 +245,18 @@
   </script>
 </head>
 <body>
+<div class='instructions'>As you read the email, use the following prompts to help you identify and annotate on the email important aspects to consider about the project.
+<li>What are the top reasons for A&P to incorporate robotics into the company?</li>
+<li>What do they specifically hope to accomplish?</li>
+<li>What are A&P’s concerns with robot integration?</li>
+<li>Are the concerns legitimate?</li>
+<li>How do those concerns impact where and how a robot should be integrated?</li></div>
   <div class='email'>
-
 <p>To: Robotics Integration Engineer</p>
 <p>From: Carrie, Production Manager</p>
 <p>Date: Today</p>
 <p>Subject: Robots!</p>
+<hr>
 <p>Hello!</p>
 <p>I hope this email finds you well. I ran into Grant the other day, and he told me that you had taken a job at the same company he works for, BestEver Robotics. Congratulations! </p>
 <p>As you know, after college I moved back to Pennsylvania to work in my family’s business, A&P Stamp and Machine, where I am now the production manager. Our company has been in business more than 55 years, and we are looking forward to another 55 years and beyond. My goal is to move our company into the 21st century by integrating robots into our manufacturing process. When Grant told me about your new position, it seemed like a perfect match! </p>
@@ -165,8 +266,25 @@
 <p>I look forward to hearing from you.</p>
 <p>Carrie</p>
 <hr>
-<img src="A&P.png"/>
+<img src="ap_logo@3x.png" width="200px" />
   </div>
-  <div contenteditable class='annotation'></div>
+  <div class='annotation-popup'>
+    <div contenteditable class='annotation'></div>
+    <button class='close fas fa-check-square'></button>
+    <button class='trash far fa-trash-alt'></button>
+  </div>
+<div class='instructions'>Based on this email, brainstorm and organize a list of 5 questions that you would like to ask Carrie during your initial meeting.</div>
+<p></p>
+<label>Question 1</label>
+<textarea></textarea>
+<label>Question 2</label>
+<textarea></textarea>
+<label>Question 3</label>
+<textarea></textarea>
+<label>Question 4</label>
+<textarea></textarea>
+<label>Question 5</label>
+<textarea></textarea>
+
 </body>
 </html>
