@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src="./jquery-3.4.1.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script type="text/javascript">
+
+    var rubric = {
+      name:"RUBRIC 1",
+      demonstrations:[
+        {name:"R1D1",actual:17,possible:20},
+        {name:"R1D2",actual:25.5,possible:30},
+        {name:"R1D3",actual:20,possible:20},
+        {name:"R1D4",actual:0,possible:15},
+        {name:"R1D5",actual:9.75,possible:15},
+      ]
+    }
+
+
+    $(function() {
+
+
+      var arc = d3.arc();
+
+      arc({
+        innerRadius: 0,
+        outerRadius: 100,
+        startAngle: 0,
+        endAngle: Math.PI / 2
+      }); // "M0,-100A100,100,0,0,1,100,0L0,0Z"
+
+      
+      
+
+
+      function drawPie($svg){
+
+        var total = 0;
+        var demonstrations = [];
+
+        for(var i=0; i<5; i++){
+          var possible = 10 + Math.random() * 50;
+          var actual = Math.random() * possible;
+
+          total += possible;
+          demonstrations[i] = {possible:possible,actual:actual}
+        }
+
+        var angle = 0;
+        for(var i=0; i<demonstrations.length; i++){
+          $path = $('<path class="n'+i+'">').appendTo($svg);
+          $path.attr('d',arc({
+            innerRadius: 0,
+            outerRadius: 50*demonstrations[i].actual/demonstrations[i].possible,
+            startAngle: angle,
+            endAngle: angle + demonstrations[i].possible/total*Math.PI*2
+          }));
+
+          angle += demonstrations[i].possible/total*Math.PI*2
+        }
+
+        $svg.html($svg.html());
+      }
+
+      function drawSeries(n){
+
+        var acts = [];
+        var aggP = 0;
+        var aggA = 0;
+
+        acts[0] = {aggPossible:0,aggActual:0};
+
+        for(var i=0; i<10; i++){
+
+          var act = {name: "Activity "+i,rub:[],possible:0,actual:0};
+
+          for( var j=0; j<5; j++){
+            var p = 10 + Math.random()*100;
+            var a = Math.random()*p*1.5;
+            act.rub[j] = {possible:p,actual:a}
+
+            aggP += p;
+            aggA += a;
+
+            act.possible += p;
+            act.actual += a;
+          }
+
+          act.aggPossible = aggP;
+          act.aggActual = aggA;
+
+
+
+          acts.push(act);
+        }
+
+        var line = d3.line()
+        .x(function(d) { return d.aggPossible/aggP *100; })
+        .y(function(d) { return 100 - d.aggActual/aggP *100; });
+        
+
+        $('<path class="actual n'+n+'">').appendTo($('.trajectory svg')).attr('d',line(acts));
+
+        //$('path.actual').attr("d", line(acts));
+
+        for( var i=1; i<acts.length; i++){
+          var d = acts[i];
+
+          var $act = $("<div class='act n"+n+"'>").appendTo($(".trajectory")).css({bottom:d.aggActual/aggP *100 + '%', left: d.aggPossible/aggP *100 + '%'});
+          
+          var dx = (d.aggPossible-acts[i-1].aggPossible)/aggP*700;
+          var dy = (d.aggActual-acts[i-1].aggActual)/aggP*200;
+          var d = Math.sqrt(dx*dx+dy*dy);
+          var degs = -Math.atan2(dy,dx)*180/Math.PI;
+
+          
+
+          var $tail = $("<div class='tail'>").appendTo($act).css({'border-right-width':d});
+          $tail.css({transform:'rotate('+degs+'deg)'})
+
+        }
+      }
+
+
+
+      for(var i=0; i<5; i++){
+          drawSeries(i);
+        }
+
+      $(".trajectory svg").html($(".trajectory svg").html());
+
+      drawPie( $(".assignment svg"));
+
+      function drawAssignment(name){
+
+        var $ass = $('.assignment').eq(0).clone().appendTo($('.assignment-list'));
+        $ass.find('svg').empty();
+        $ass.find('h1').html(name);
+        drawPie( $ass.find('svg') );
+        
+      }
+
+      drawAssignment('1.2 Explore');
+      drawAssignment('1.3 Decide');
+      
+      drawPie( $(".outcome-breakdown svg").eq(0));
+      drawPie( $(".outcome-breakdown svg").eq(1));
+      drawPie( $(".outcome-breakdown svg").eq(2));
+
+      function rubricToTable(r){
+        var str = '';
+        for(i in r.demonstrations){
+          var d = r.demonstrations[i];
+          str += '<div class="demonstration">'+d.name+'</div>';
+        }
+      }
+    });
+  </script>
+  <style>
+  @font-face{
+    font-family: 'secondary-font';
+    src: url('./amadeus/DroidSans.ttf'); 
+  }
+
+  body{
+    font-family: 'secondary-font';
+    color: #333;
+    width: 700px;
+    padding: 0px;
+    margin: auto;
+    padding-bottom: 50px;
+  }
+
+    h1{
+      font-size: 30px;
+      color: #005AB8;
+      font-weight: normal
+    }
+
+    h2{
+      font-size: 20px;
+      font-weight: normal;
+      color: rgba(0, 169, 224, 1);
+    }
+
+    .trajectory{
+      width: 700px;
+      height: 200px;
+      border-left: 1px solid #999;
+      border-bottom: 1px solid #999;
+      position: relative;
+    }
+
+
+    .trajectory-marker{
+      position: absolute;
+    }
+
+    .assignment{
+      padding: 10px;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .assignment h1{
+      font-size: 15px;
+    }
+
+    .assignment h2{
+      font-size: 10px;
+      color: #777;
+    }
+
+    .trajectory-marker{
+
+    }
+
+    .r{
+      font-size: 10px;
+      width: 30px;
+      line-height: 20px;
+      background: #f5f5f5;
+      border-radius: 2px;
+      display: inline-block;
+      text-align: center;
+      font-weight: bold;
+      color: #77bbff;
+    }
+
+    .r.good{
+      color: #01A34E;
+    }
+
+    .bad{
+      color: #CD0057;
+    }
+
+    .outcome-breakdown svg, .assignment svg{
+      border: 1px solid #ddd;
+      border-radius: 100px;
+      box-sizing: border-box;
+    }
+
+    .assignment path{
+      fill: blue;
+    }
+
+    path.actual{
+      stroke-width: 0.5;
+      stroke: blue;
+      fill: none;
+    }
+
+    path.possible{
+      fill: rgba(200,255,200);
+    }
+
+    path.bad{
+      fill: rgba(255,230,200);
+    }
+
+    path.worse{
+      fill: rgba(255,200,200);
+    }
+
+    .label{
+      position: absolute;
+      right: -205px;
+      width: 200px;
+
+      font-size: 10px;
+      display: inline-block;
+    }
+
+    .act{
+      position: absolute;
+    }
+
+    .act:after{
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 10px;
+      background: white;
+      position: absolute;
+      left: -4px;
+      top: -4px;
+      box-sizing: border-box;
+      border: 2px solid blue;
+    }
+
+    .act .tail{
+      width: 0; 
+      height: 0; 
+      border-top: 2px solid transparent;
+      border-bottom: 2px solid transparent; 
+      border-right:100px solid blue;
+      position: absolute;
+      top: -1px;
+      right: 0px; 
+      transform-origin: 100% 50%;
+      display: none;
+    }
+
+    h1 img{
+      vertical-align: middle;
+      margin-right: 15px;
+    }
+
+    select, option{
+      font-size: inherit;
+      font-family: inherit;
+      color: inherit;
+      background: #eee;
+      border: none;
+    }
+
+    .outcome-breakdown {
+      display: inline-block;
+      text-align: center;
+      margin-right: 20px;
+    }
+
+    .outcome-breakdown h2{
+      font-size: 12px;
+      color: #777;
+    }
+
+    .outcome-breakdown path.n0{ fill: #6f2b8d; }
+    .assignment path.n0{ fill: #6f2b8d; }
+    .trajectory path.n0{ stroke: #6f2b8d; }
+    .act.n0:after{ border-color: #6f2b8d; }
+    .act.n0 .tail{ border-right-color:#6f2b8d; }
+
+    .outcome-breakdown path.n1{ fill: rgb(206,0,88); }
+    .assignment path.n1{ fill: rgb(206,0,88); }
+    .trajectory path.n1{ stroke: rgb(206,0,88); }
+    .act.n1:after{ border-color: rgb(206,0,88); }
+    .act.n1 .tail{ border-right-color: rgb(206,0,88); }
+
+    .outcome-breakdown path.n2{ fill: rgb(233,83,38); }
+    .assignment path.n2{ fill: rgb(233,83,38); }
+    .trajectory path.n2{ stroke: rgb(233,83,38); }
+    .act.n2:after{ border-color: rgb(233,83,38); }
+    .act.n2 .tail{ border-right-color: rgb(233,83,38); }
+
+    .outcome-breakdown path.n3{ fill: rgb(247,168,39); }
+    .assignment path.n3{ fill: rgb(247,168,39); }
+    .trajectory path.n3{ stroke: rgb(247,168,39); }
+    .act.n3:after{ border-color: rgb(247,168,39); }
+    .act.n3 .tail{ border-right-color: rgb(247,168,39); }
+
+    .outcome-breakdown path.n4{ fill: rgb(0,163,78); }
+    .assignment path.n4{ fill: rgb(0,163,78); }
+    .trajectory path.n4{ stroke: rgb(0,163,78); }
+    .act.n4:after{ border-color: rgb(0,163,78); }
+    .act.n4 .tail{ border-right-color: rgb(0,163,78); }
+
+  </style>
+</head>
+<body>
+  <h1><img width=150 src="https://amadeus-moodle.elearninginnovation.com/pluginfile.php/1/core_admin/logocompact/0x70/1557940425/logo-amadeus.png"/>Reports for Joshua Kernich</h1>
+  <h2>Outcomes</h2>
+  <div class='outcome-breakdown'>
+    <h2>Learning Objectives</h2>
+    <svg width=100 height=100 viewbox='-50 -50 100 100'></svg>
+  </div>
+  <div class='outcome-breakdown'>
+    <h2>Course Outcomes</h2>
+    <svg width=100 height=100 viewbox='-50 -50 100 100'></svg>
+  </div>
+  <div class='outcome-breakdown'>
+    <h2>Program Outcomes</h2>
+    <svg width=100 height=100 viewbox='-50 -50 100 100'></svg>
+  </div>
+  <br><br>
+  <h2>Assignments</h2>
+  <div class='assignment-list'>
+  <div class='assignment'>
+    <h1>1.1 Reflect</h1>
+    <div class='demonstrations'>
+      <h2>Rubic Demonstrations</h2>
+      <svg width=100 height=100 viewbox='-50 -50 100 100'></svg>
+    </div>
+    <div class='learning-objectives'>
+      <h2>Learning Objectives</h2>
+    <div class='r good'>+6</div>
+    <div class='r good'>+5</div>
+    <div class='r'>+4</div>
+    <div class='r bad'>0</div>
+    <div class='r'>+2</div>
+    </div>
+    <div class='course-outcomes'>
+      <h2>Course Outcomes</h2>
+    <div class='r good'>+5</div>
+    <div class='r good'>+3</div>
+    <div class='r'>+1</div>
+    <div class='r bad'>0</div>
+    <div class='r'>+1</div>
+    </div>
+    <div class='program-outcomes'>
+      <h2>Program Outcomes</h2>
+    <div class='r good'>+5</div>
+    <div class='r'>+1</div>
+    <div class='r bad'>+1</div>
+    <div class='r'>0</div>
+    <div class='r'>0</div>
+    </div></div></div>
+  <br>
+  <br>
+  <h2>Trajectory for <select><option>Learning Objectives</option></select></h2>
+  <div class='trajectory'>
+    <svg vector-effect='non-scaling-stroke' width='100%' height='100%' viewbox='0 0 100 100' preserveAspectRatio='none'>
+      <path class='possible' d='M0,100 L100,0 L100,100'></path>
+      <path class='bad' d='M0,100 L100,25, L100,100'></path>
+      <path class='worse' d='M0,100 L100,50, L100,100'></path>
+      <path class='actual'></path>
+
+    </svg>
+    <div class='label' style='top:0px;line-height:50px'>Competent</div>
+    <div class='label' style='top:50px;line-height:50px'>Struggling</div>
+    <div class='label' style='top:100px;line-height:100px'>Failing</div>
+  </div>
+</body>
+</html>
