@@ -1,9 +1,13 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
+  <meta charset="UTF-8">
   <title></title>
   <script type="text/javascript" src="./jquery-3.4.1.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://kit.fontawesome.com/0f71cca56e.js"></script>
   <script type="text/javascript">
 
     var rubric = {
@@ -29,6 +33,42 @@
         startAngle: 0,
         endAngle: Math.PI / 2
       }); // "M0,-100A100,100,0,0,1,100,0L0,0Z"
+
+      function drawDonut($svg,stats){
+
+        
+        var good = 50;
+        var bad = 30;
+        var worse = 10;
+        var total = 0;
+
+        
+        var list = [good,bad,worse];
+        if(stats) list = stats;
+
+        for(var i=0;i<list.length;i++) total += list[i];
+
+        var clazz = ['good','bad','worse']
+
+        var angle = 0;
+        for(var i=0; i<list.length; i++){
+          $path = $('<path class="n'+i+'">').appendTo($svg);
+          $path.addClass(clazz[i]);
+
+          var arcSize = list[i]/total * Math.PI*2;
+
+          $path.attr('d',arc({
+            innerRadius: 35,
+            outerRadius: 50,
+            startAngle: angle,
+            endAngle: angle + arcSize
+          }));
+
+          angle += arcSize;
+        }
+
+        $svg.html($svg.html());
+      }
 
       function drawPie($svg,allTheSame){
 
@@ -81,7 +121,11 @@
             var p = 10 + Math.random()*100;
             var a = Math.random()*p;
 
+
+
             if(Math.random()>0.5) a = p;
+
+            if(n>=18) a = Math.random()*p*0.7;
 
             act.rub[j] = {possible:p,actual:a}
 
@@ -106,34 +150,68 @@
         .x(function(d) { return d.aggPossible/scope *100; })
         .y(function(d) { return 100 - d.aggActual/scope *100; });
         
+        var $list = $('<div class="act-list">').appendTo($(".trajectory"));
+        var $path = $('<path class="actual n'+n+'">').appendTo($('.trajectory svg')).attr('d',line(acts));
 
-        $('<path class="actual n'+n+'">').appendTo($('.trajectory svg')).attr('d',line(acts));
+
 
         //$('path.actual').attr("d", line(acts));
 
         for( var i=1; i<acts.length; i++){
           var d = acts[i];
 
-          var $act = $("<div class='act n"+n+"'>").appendTo($(".trajectory")).css({bottom:d.aggActual/scope *100 + '%', left: d.aggPossible/scope *100 + '%'});
+          var $act = $("<div class='act n"+n+"'>").appendTo($list).css({bottom:d.aggActual/scope *100 + '%', left: d.aggPossible/scope *100 + '%'});
           
           var dx = (d.aggPossible-acts[i-1].aggPossible)/aggP*700;
           var dy = (d.aggActual-acts[i-1].aggActual)/aggP*200;
           var d = Math.sqrt(dx*dx+dy*dy);
           var degs = -Math.atan2(dy,dx)*180/Math.PI;
 
-          
-
           var $tail = $("<div class='tail'>").appendTo($act).css({'border-right-width':d});
           $tail.css({transform:'rotate('+degs+'deg)'})
-
         }
+
+        $("<div class='student-info'>").appendTo($act).html("<h1>James Jameson</h1><hr><b class='bad'><i class='fas fa-check-circle'></i> Struggling</b> to reach competency.<hr><b class='good'><i class='fas fa-hourglass-half'></i> On-track</b> to complete the program on time.<br><br><a>More...</a>");
+        
+
+        $list.find('.act').click(function(){
+
+          $('.act-list').removeClass('selected');
+
+          var n = $('.act-list').index($list);
+
+          $('.trajectory path.actual').css('visibility','hidden');
+          $('.trajectory path.actual.n'+n).css('visibility','visible');
+
+          $list.addClass('selected');
+
+        })
       }
 
 
 
-      for(var i=0; i<5; i++){
+
+      for(var i=0; i<20; i++){
           drawSeries(i);
         }
+
+      $('.cohort-stat').eq(0).click(function(){
+        $('.modal').show();
+        $('.modal-box').hide();
+        $('.modal .modal-cohort-comps').css({display:"inline-block"});
+      });
+
+      $('.cohort-stat').eq(1).click(function(){
+        $('.modal').show();
+        $('.modal-box').hide();
+        $('.modal .modal-cohort-time').css({display:"inline-block"});
+      });
+
+      $('.student-info').click(function(){
+        $('.modal').show();
+        $('.modal-box').hide();
+        $('.modal .modal-student').css({display:"inline-block"});
+      });
 
       $(".trajectory svg").html($(".trajectory svg").html());
 
@@ -145,12 +223,9 @@
         $ass.find('svg').empty();
         $ass.find('h1').html(name);
         drawPie( $ass.find('svg') );
-
-        
-        
       }
 
-      $('.modal').click(function(){
+      $('.modal .close-button').click(function(){
           $('.modal').hide();
         })
 
@@ -160,9 +235,15 @@
       drawAssignment('1.5 Demonstrate');
       drawAssignment('1.6 Reflect');
       
-      drawPie( $(".outcome-breakdown svg").eq(0),true);
-      drawPie( $(".outcome-breakdown svg").eq(1),true);
-      drawPie( $(".outcome-breakdown svg").eq(2),true);
+      drawDonut( $(".outcome-breakdown svg").eq(0),true);
+      drawDonut( $(".outcome-breakdown svg").eq(1),true);
+      drawDonut( $(".outcome-breakdown svg").eq(2),true);
+
+      drawDonut( $('.cohort-stat svg').eq(0),[50,30,20]);
+      drawDonut( $('.cohort-stat svg').eq(1),[30,45,25]);
+      drawDonut( $('.cohort-stat svg').eq(2),[50,30,20]);
+
+      //drawDonut( $(".outcome-overview svg"));
 
       $('.outcome-breakdown').click(function(){
         $('.modal').show();
@@ -188,9 +269,85 @@
           str += '<div class="demonstration">'+d.name+'</div>';
         }
       }
+
+      var NUMBER_OF_COURSES = 10;
+      var NUMBER_OF_LOS = 5;
+
+      function addHeatmapRow(){
+
+        
+
+
+        var score = [];
+        var status = [];
+
+
+        
+
+        var str = '\
+        <div class="hm-outcome">\
+          <div class="hm-outcome-name"><i class="fas fa-caret-square-down"></i> Achieve an outcome that is descriptive</div>';
+
+
+
+        for(var i=0; i<NUMBER_OF_COURSES; i++){
+
+          score[i] = Math.random()>0.2?(0.3*Math.random()*7):-1;
+
+          if(score[i] == -1) status[i] = 'none';
+          else if(score[i] < 0.5) status[i] = 'worse';
+          else if(score[i] < 0.75) status[i] = 'bad';
+          else status[i] = 'good';
+
+          str += '<div class="hm-course '+status[i]+'"></div>';
+        }
+
+        for(var j=0; j<NUMBER_OF_LOS; j++){
+          str += '<div class="hm-lo"><div class="hm-outcome-name">Achieve an objective that is descriptive</div>';
+          for(var k=0; k<NUMBER_OF_COURSES; k++){
+
+            var s = score[k] - 0.2 + Math.random() * 0.4;
+            
+            if(score[k] == -1) status = 'none';
+            else if(s < 0.5) status = 'worse';
+            else if(s < 0.75) status = 'bad';
+            else status = 'good';
+
+            str += '<div class="hm-course '+status+'"></div>';
+          }
+
+          str += "</div>"
+        }
+    
+
+
+
+        str += '</div>'
+
+
+        var $hmo = $(str).appendTo('.hm');
+        $hmo.click(function(){
+          $(this).toggleClass('open');
+        })
+      }
+
+      var str = "";
+      for(var i=0; i<NUMBER_OF_COURSES; i++){
+        str += "<div class='hm-course-title'>Course "+i+"</div>";
+      }
+
+      $(".hm-outcome").append(str);
+
+      for(var i=0; i<10; i++) addHeatmapRow();
+
+      $('.hm').eq(1).html($('.hm').eq(0).html());
+
     });
   </script>
   <style>
+
+
+
   @font-face{
     font-family: 'secondary-font';
     src: url('./amadeus/DroidSans.ttf'); 
@@ -239,7 +396,9 @@
       position: absolute;
       font-size: 10px;
       top: 310px;
-      left: 50px;
+      left: 0px;
+      right: 0px;
+      text-align: center;
     }
 
     .trajectory .axis-label.y{
@@ -247,6 +406,21 @@
       left: -165px;
       top: 120px;
       transform: rotate(-90deg);
+    }
+
+    .trajectory .axis-label.end.x{
+      left: auto;
+      right: 0px;
+      padding-right: 5px;
+      border-right: 1px solid #999;
+    }
+
+    .trajectory .axis-label.start.x{
+      left: auto;
+      left: 0px;
+      right: auto;
+      padding-left: 5px;
+      border-left: 1px solid #999;
     }
 
     .trajectory-marker{
@@ -311,17 +485,8 @@
       fill: none;
     }
 
-    path.possible{
-      fill: rgba(200,255,200);
-    }
+    
 
-    path.bad{
-      fill: rgba(255,230,200);
-    }
-
-    path.worse{
-      fill: rgba(255,200,200);
-    }
 
     .label{
       position: absolute;
@@ -330,6 +495,32 @@
 
       font-size: 10px;
       display: inline-block;
+    }
+
+    .student-info{
+      padding: 10px;
+      border: 1px solid #555;
+      position: absolute;
+      bottom: 10px;
+      width: 100px;
+      left: -50px;
+      font-size: 10px;
+      border-radius: 10px;
+      display: none;
+      color: #555;
+      background: white;
+      z-index: 1;
+    }
+
+    .student-info h1{
+      font-size: 14px;
+      margin-top: 0px;
+      padding-top: 0px;
+    }
+
+    .act-list.selected .student-info,
+    .act:hover .student-info{
+      display: block;
     }
 
     .act{
@@ -341,7 +532,7 @@
       width: 8px;
       height: 8px;
       border-radius: 10px;
-      background: white;
+      background: #777;
       position: absolute;
       left: -4px;
       top: -4px;
@@ -396,7 +587,6 @@
     .outcome-breakdown h2{
       font-size: 15px;
       color: inherit;
-      width: 100px;
     }
 
     .assignment-popup{
@@ -427,6 +617,9 @@
 
     }
 
+    .hm-course.good{ background: rgb(0,163,78); }
+    .hm-course.bad{ background: rgb(247,168,39); }
+    .hm-course.worse{ background: rgb(206,0,88); }
 
     path.good{ fill: rgb(0,163,78); }
     path.bad{ fill: rgb(247,168,39); }
@@ -476,6 +669,18 @@
       border-radius: 5px;
     }
 
+    b.good, i.good{
+      color: rgb(0,163,78);
+    }
+
+    b.bad, i.bad{
+      color: rgb(247,168,39);
+    }
+
+    b.worse, i.worse{
+      color: rgb(206,0,88);
+    }
+
     .outcome-writeup .actual.good{
       background: rgb(0,163,78);
     }
@@ -515,6 +720,7 @@
       text-align: center;
       padding: 20px;
       display: none;
+      z-index: 2;
     }
 
     .modal-box{
@@ -572,24 +778,211 @@
     .modal h1{
       margin-top: 0px;
     }
+
+    .act-list{
+
+
+    }
+
+    .act-list .act{
+      display: none;
+      cursor: pointer;
+    }
+
+    .act-list .act:last-of-type{
+      display: block;
+    }
+
+    .act-list.selected .act{
+      display: block;
+    }
+
+    .act-list .act:last-of-type:after{
+      background: white;
+    }
+
+    .trajectory path.actual{
+      visibility: hidden;
+    }
     
+    .cohort-stat{
+      display: inline-block;
+      position: relative;
+      width: 150px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .pie-symbol{
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      line-height: 150px;
+      font-size: 60px;
+      opacity: 0.1;
+      text-align: center;
+    }
+
+    .pie-number{
+      position: absolute;
+      top: 40px;
+      left: 0px;
+      right: 0px;
+      line-height:20px;
+      font-size: 20px; 
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .pie-stat{
+      position: absolute;
+      top: 70px;
+      left: 0px;
+      right: 0px;
+      text-align: center;
+      font-size: 10px;
+      width: 80px;
+      margin: auto;
+    }
+
+    a{
+      color: blue;
+      text-align: center;
+      font-size: 12px;
+      display: block;
+      margin-top: 10px;
+    }
+
+    .hm{
+      font-size: 12px;
+      padding-top: 30px;
+      padding-right: 10px;
+    }
+
+    .hm-outcome{
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .hm-outcome-name{
+      margin-right: 10px;
+      display: inline-block;
+      vertical-align: middle;
+      width: 230px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .hm-course, .hm-course-title{
+      width: 15px;
+      height: 15px;
+      margin-right: 1px;
+      background: #ddd;
+      border-radius: 2px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .hm-course-title{
+      background: none;
+      font-size: 10px;
+      white-space: nowrap;
+      transform: rotate(-65deg);
+    }
+
+    .hm-lo{
+      display: none;
+      margin-top: 2px;
+    }
+
+    .hm-lo .hm-outcome-name{
+      padding-left: 20px;
+      box-sizing: border-box;
+    }
+
+    .hm-outcome.open .hm-lo{
+      display: block;
+    }
+
+    .close-button{
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      font-size: 40px;
+      line-height: 60px;
+      width: 70px;
+
+      color: #999;
+      text-align: center;
+      border: none;
+
+      background: none;
+      cursor: pointer;
+    }
+
+    button{
+      outline: none;
+    }
+
+    .student-time-info{
+      font-size: 12px;
+      line-height: 20px;
+    }
 
   </style>
 </head>
 <body>
-  <h1><img width=150 src="https://amadeus-moodle.elearninginnovation.com/pluginfile.php/1/core_admin/logocompact/0x70/1557940425/logo-amadeus.png"/>Reports for Joshua Kernich</h1>
+  
+
+  <h1><img width=150 src="https://amadeus-moodle.elearninginnovation.com/pluginfile.php/1/core_admin/logocompact/0x70/1557940425/logo-amadeus.png"/>Reports for All Students</h1>
+  <h2>Overall <div class="keys"><div class="key">Performing Well</div><div class="key">Passing</div><div class="key">Failing</div></div></h2>
+  <div class='cohort-stat'>
+    <svg class='pie' width=150 height=150 viewbox='-50 -50 100 100'></svg>
+    <div class='pie-number'><i class="fas fa-check-circle"></i> 80%</div>
+    <div class='pie-stat'>of all students are reaching comepetency</div>
+    <a>More...</a>
+  </div>
+  <div class='cohort-stat'>
+    <svg class='pie' width=150 height=150 viewbox='-50 -50 100 100'></svg>
+    <div class='pie-number'> <i class="fas fa-hourglass-half"></i> 75%</div>
+    <div class='pie-stat'>of all students are up-to-date</div>
+    <a>More...</a>
+  </div>
+  <br>
+  <br>
+  <h2>Trajectory for <select><option>Overall Competency</option><option>Program Outcome 1</option><option>Program Outcome 2</option></select> across <select><option>The Entire Program</option><option>Course 1</option><option>Course 2</option></select> <div class="keys"><div class="key">Competent</div><div class="key">Struggling</div><div class="key">Failing</div></div></h2>
+  <div class='trajectory'>
+    <svg vector-effect='non-scaling-stroke' width='100%' height='100%' viewbox='0 0 100 100' preserveAspectRatio='none'>
+      <path class='good' d='M0,100 L100,0 L100,100'></path>
+      <path class='bad' d='M0,100 L100,25, L100,100'></path>
+      <path class='worse' d='M0,100 L100,50, L100,100'></path>
+      <path class='actual'></path>
+    </svg>
+    <div class='axis-label x'>Potential Competency (based on selection of assignments undertaken)</div>
+    <div class='axis-label start x'>Start of Program</div>
+    <div class='axis-label end x'>End of Program</div>
+    <div class='axis-label y'>Aggregate Competency (based on assignment results)</div>
+    <div class='label' style='top:0px;line-height:75px'>Competent</div>
+    <div class='label' style='top:75px;line-height:75px'>Struggling</div>
+    <div class='label' style='top:150px;line-height:150px'>Failing</div>
+  </div>
+  <!--
+  <br>
   <h2>Outcomes <div class="keys"><div class="key">Competent</div><div class="key">Struggling</div><div class="key">Failing</div></div></h2>
   <div class='outcome-breakdown'>
     <h2>Learning Objectives</h2>
-    <svg class='pie' width=100 height=100 viewbox='-50 -50 100 100'></svg>
+    <svg class='pie' width=200 height=200 viewbox='-50 -50 100 100'></svg>
   </div>
   <div class='outcome-breakdown'>
     <h2>Course Outcomes</h2>
-    <svg class='pie' width=100 height=100 viewbox='-50 -50 100 100'></svg>
+    <svg class='pie' width=200 height=200 viewbox='-50 -50 100 100'></svg>
   </div>
   <div class='outcome-breakdown'>
     <h2>Program Outcomes</h2>
-    <svg class='pie' width=100 height=100 viewbox='-50 -50 100 100'></svg>
+    <svg class='pie' width=200 height=200 viewbox='-50 -50 100 100'></svg>
   </div>
   <br><br>
   <h2>Assignments <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
@@ -626,9 +1019,39 @@
     <div class='r'>0</div>
     <div class='r'>0</div>
     </div></div></div></div>
-  <br>
+  <br>-->
 
   <div class='modal'>
+    <button class='close-button'>×</button>
+    <div class="modal-box modal-cohort-time">
+      <h1>Cohort Program Pace</h1>
+      <h2>Students Requiring Intervention</h2>
+      <div class="student-time-info"><i class="worse fas fa-exclamation-circle"></i> James Jameson is <b class='worse'>3 weeks</b> behind schedule.</div>
+      <div class="student-time-info"><i class="bad fas fa-exclamation-circle"></i> Abram Abrahamington is <b class='bad'>1 week</b> behind schedule.</div>
+      <div class="student-time-info"><i class="bad fas fa-exclamation-circle"></i> Lucy Lucerne is <b class='bad'>3 days</b> behind schedule.</div>
+    </div>
+    <div class="modal-box modal-cohort-comps">
+      <h1>Cohort Program Competency</h1>
+      <h2>Program Map <div class="keys"><div class="key">All Competent</div><div class="key">Some Difficulties</div><div class="key">Intervention Required</div></div></h2>
+      <div class="hm">
+        <div class='hm-outcome'><div class='hm-outcome-name'></div></div>
+      </div>
+    </div>
+    <div class='modal-box modal-student'>
+      <h1>James Jameson</h1>
+      <h2>Summary</h2>
+      <div class='cohort-stat'>
+        <svg class='pie' width=150 height=150 viewbox='-50 -50 100 100'></svg>
+        <div class='pie-number'><i class="fas fa-check-circle"></i> 80%</div>
+        <div class='pie-stat'>of competencies are approaching pass or better</div>
+      </div>
+      <br><br>
+      <h2>Program Map <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
+      <div class="hm">
+        <div class='hm-outcome'><div class='hm-outcome-name'></div>
+      </div>
+      </div>
+    </div>
     <div class='modal-box modal-assignment'>
       <h1></h1>
       <h2>Rubric Demonstrations <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
@@ -670,6 +1093,7 @@
   <div class='trajectory'>
     <div class='axis-label x'>Potential Competency (based on selection of assignments undertaken)</div>
     <div class='axis-label y'>Aggregate Competency (based on assignment results)</div>
+
     <svg vector-effect='non-scaling-stroke' width='100%' height='100%' viewbox='0 0 100 100' preserveAspectRatio='none'>
       <path class='good' d='M0,100 L100,0 L100,100'></path>
       <path class='bad' d='M0,100 L100,25, L100,100'></path>
