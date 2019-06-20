@@ -162,6 +162,13 @@
 
           var $act = $("<div class='act n"+n+"'>").appendTo($list).css({bottom:d.aggActual/scope *100 + '%', left: d.aggPossible/scope *100 + '%'});
           
+          var score = d.actual/d.possible;
+
+          if(score>0.75) $act.addClass('good');
+          else if(score>0.5) $act.addClass('bad');
+          else $act.addClass('worse');
+
+
           var dx = (d.aggPossible-acts[i-1].aggPossible)/aggP*700;
           var dy = (d.aggActual-acts[i-1].aggActual)/aggP*200;
           var d = Math.sqrt(dx*dx+dy*dy);
@@ -171,21 +178,33 @@
           $tail.css({transform:'rotate('+degs+'deg)'})
         }
 
-        $("<div class='student-info'>").appendTo($act).html("<h1>James Jameson</h1><hr><b class='bad'><i class='fas fa-check-circle'></i> Struggling</b> to reach competency.<hr><b class='good'><i class='fas fa-hourglass-half'></i> On-track</b> to complete the program on time.<br><br><a>More...</a>");
+        $("<div class='student-info'>").appendTo($act).html("<h1>James Jameson</h1><hr><b class='bad'><i class='fas fa-check-circle'></i> Struggling</b> to reach competency.<hr><b class='good'><i class='fas fa-hourglass-half'></i> On-track</b> to complete the program on time.<br><br><a>More...</a><button class='close-student-info-button'>×</button>");
         
 
         $list.find('.act').click(function(){
 
-          $('.act-list').removeClass('selected');
+          if($list.hasClass('selected')){
 
-          var n = $('.act-list').index($list);
+            $('.modal').show();
+            $('.modal-box').hide();
+            $('.modal-assignment').css({display:"inline-block"});
+            $('.modal-assignment .pie').html($('.assignment').find('svg').html());
+            $('.modal-assignment h1').html($('.assignment').find('h1').html());
 
-          $('.trajectory path.actual').css('visibility','hidden');
-          $('.trajectory path.actual.n'+n).css('visibility','visible');
+          } else{
+            $('.act-list').removeClass('selected');
 
-          $list.addClass('selected');
+            var n = $('.act-list').index($list);
+
+            $('.trajectory path.actual').css('visibility','hidden');
+            $('.trajectory path.actual.n'+n).css('visibility','visible');
+
+            $list.addClass('selected');
+          }
 
         })
+
+
       }
 
 
@@ -207,10 +226,18 @@
         $('.modal .modal-cohort-time').css({display:"inline-block"});
       });
 
-      $('.student-info').click(function(){
+      $('.student-info').click(function(e){
+        e.stopPropagation();
         $('.modal').show();
         $('.modal-box').hide();
         $('.modal .modal-student').css({display:"inline-block"});
+      });
+
+      $('.student-info .close-student-info-button').click(function(e){
+        e.stopPropagation();
+        $('.act-list').removeClass('selected');
+        $('.trajectory path.actual').css('visibility','hidden');
+
       });
 
       $(".trajectory svg").html($(".trajectory svg").html());
@@ -288,8 +315,6 @@
         <div class="hm-outcome">\
           <div class="hm-outcome-name"><i class="fas fa-caret-square-down"></i> Achieve an outcome that is descriptive</div>';
 
-
-
         for(var i=0; i<NUMBER_OF_COURSES; i++){
 
           score[i] = Math.random()>0.2?(0.3*Math.random()*7):-1;
@@ -318,12 +343,8 @@
 
           str += "</div>"
         }
-    
-
-
 
         str += '</div>'
-
 
         var $hmo = $(str).appendTo('.hm');
         $hmo.click(function(){
@@ -331,22 +352,149 @@
         })
       }
 
-      var str = "";
+      var NUMBER_OF_COMPS = 10;
+
+      function addHeatmapColumn(n,countRows,$el){
+        var str = '<div class="hm-comp">';
+
+        str += '<div class="hm-comp-list"><div class="hm-comp-name">A competency we will call '+n+'</div>';
+
+        for(var j=0; j<countRows; j++){
+          var state = 'none';
+          if(Math.random()>0.5) state = 'good';
+          if(Math.random()>0.9) state = 'bad';
+          if(Math.random()>0.9) state = 'worse';
+
+          str += '<div class="hm-dot '+state+'"></div>';
+        }
+
+        str += '</div>';
+
+        for(var i=0; i<NUMBER_OF_LOS; i++){
+          str += '<div class="hm-comp-list"><div class="hm-comp-name">A Learning Objective we will call '+n+':'+i+'</div>';
+          for(var j=0; j<countRows; j++){
+            var state = 'none';
+            if(Math.random()>0.5) state = 'good';
+            if(Math.random()>0.9) state = 'bad';
+            if(Math.random()>0.9) state = 'worse';
+            str += '<div class="hm-dot '+state+'"></div>';
+          }
+          str+= '</div>'
+        }
+
+        str += '</div>'
+
+        var $hmc = $(str).appendTo($el);
+        $hmc.click(function(){
+          $(this).toggleClass('open');
+        })
+      }
+
+      /*var str = "";
       for(var i=0; i<NUMBER_OF_COURSES; i++){
         str += "<div class='hm-course-title'>Course "+i+"</div>";
       }
 
-      $(".hm-outcome").append(str);
+      $(".hm-outcome").append(str);*/
 
-      for(var i=0; i<10; i++) addHeatmapRow();
+      function makeHeatmap($el,count){
+        var str = "<div class='hm-student-name-list'>";
+        for(var i=0; i<count; i++) str += '<div class="hm-student-name">Longname Longnameington</div>';
+        str += '</div>'
 
-      $('.hm').eq(1).html($('.hm').eq(0).html());
+        $(str).appendTo($el);
+
+        for(var i=0; i<20; i++) addHeatmapColumn(i,count,$el);
+      }
+      
+      makeHeatmap($('.hm').eq(0),20);
+      makeHeatmap($('.hm').eq(1),1);
+
+      //$('.hm').eq(1).html($('.hm').eq(0).html());
 
     });
   </script>
   <style>
 
 
+
+  .close-student-info-button{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    line-height: 15px;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0px;
+    cursor: pointer;
+    display: none;
+  }
+
+  .hm-student-name-list{
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 5px;
+  }
+
+  .hm-student-name{
+    display: block;
+    line-height: 15px;
+    margin-bottom: 1px;
+
+  }
+
+  .hm-dot{
+    width: 15px;
+    height: 15px;
+    background: #ddd;
+    display: block;
+    margin: 0px 1px 1px 0px;
+  }
+
+  .hm-dot.good{ background: rgb(0,163,78);}
+
+  .hm-dot.bad{ background: rgb(247,168,39);}
+
+  .hm-dot.worse{ background: rgb(206,0,88);}
+
+  .hm-comp{
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .hm-comp-list{
+    white-space: normal;
+    position: relative;
+    display: none;
+  }
+
+  .hm-comp-list:first-of-type{
+    display: inline-block;
+  }
+
+  .hm-comp.open .hm-comp-list{
+    display: inline-block;
+  }
+
+  .hm-comp-name{
+    width: 150px;
+    overflow: hidden;
+    transform: rotate(-90deg); 
+    transform-origin: top left;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    top: -10px;
+    left: 0px;
+    line-height: 15px;
+    text-overflow: ellipsis;
+  }
 
   @font-face{
     font-family: 'secondary-font';
@@ -505,7 +653,7 @@
       width: 100px;
       left: -50px;
       font-size: 10px;
-      border-radius: 10px;
+      border-radius: 5px;
       display: none;
       color: #555;
       background: white;
@@ -523,21 +671,37 @@
       display: block;
     }
 
+    .act-list.selected .close-student-info-button{
+      display: block;
+    }
+
     .act{
       position: absolute;
     }
 
     .act:after{
       content: "";
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 10px;
       background: #777;
       position: absolute;
-      left: -4px;
-      top: -4px;
+      left: -5px;
+      top: -5px;
       box-sizing: border-box;
       border: 2px solid blue;
+    }
+
+    .act.good:after{
+      background: rgb(0,163,78);
+    }
+
+    .act.bad:after{
+      background: rgb(247,168,39);
+    }
+
+    .act.worse:after{
+      background: rgb(206,0,88);
     }
 
     .act .tail{
@@ -721,6 +885,7 @@
       padding: 20px;
       display: none;
       z-index: 2;
+      overflow-y: auto;
     }
 
     .modal-box{
@@ -797,7 +962,7 @@
       display: block;
     }
 
-    .act-list .act:last-of-type:after{
+    .act-list:not(.selected) .act:last-of-type:after{
       background: white;
     }
 
@@ -856,7 +1021,7 @@
 
     .hm{
       font-size: 12px;
-      padding-top: 30px;
+      padding-top: 150px;
       padding-right: 10px;
     }
 
@@ -1034,7 +1199,7 @@
       <h1>Cohort Program Competency</h1>
       <h2>Program Map <div class="keys"><div class="key">All Competent</div><div class="key">Some Difficulties</div><div class="key">Intervention Required</div></div></h2>
       <div class="hm">
-        <div class='hm-outcome'><div class='hm-outcome-name'></div></div>
+
       </div>
     </div>
     <div class='modal-box modal-student'>
@@ -1046,11 +1211,21 @@
         <div class='pie-stat'>of competencies are approaching pass or better</div>
       </div>
       <br><br>
-      <h2>Program Map <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
+      <h2>Course Map <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
       <div class="hm">
-        <div class='hm-outcome'><div class='hm-outcome-name'></div>
       </div>
+      <br>
+      <h2>Assignments <div class="keys"><div class="key">Competent</div><div class="key">Marginal</div><div class="key">Insufficient</div></div></h2>
+      <div class='assignment-list'>
+        <div class='assignment'>
+          <h1>1.1 Reflect</h1>
+          <div class='demonstrations'>
+            <h2>Rubric Demonstrations</h2>
+            <svg class='pie' width=100 height=100 viewbox='-50 -50 100 100'></svg>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class='modal-box modal-assignment'>
       <h1></h1>
