@@ -237,7 +237,6 @@
         e.stopPropagation();
         $('.act-list').removeClass('selected');
         $('.trajectory path.actual').css('visibility','hidden');
-
       });
 
       $(".trajectory svg").html($(".trajectory svg").html());
@@ -357,7 +356,7 @@
       function addHeatmapColumn(n,countRows,$el){
         var str = '<div class="hm-comp">';
 
-        str += '<div class="hm-comp-list"><div class="hm-comp-name">A competency we will call '+n+'</div>';
+        str += '<div class="hm-comp-list"><div class="hm-comp-name expandable">A competency we will call '+n+'</div>';
 
         for(var j=0; j<countRows; j++){
           var state = 'none';
@@ -466,16 +465,32 @@
   .hm-comp{
     display: inline-block;
     white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .hm-comp.open{
+    margin: 0px 5px;
+  }
+
+  .hm-comp.open .expandable{
+    color: orange;
+  }
+
+  .hm-comp.open .expandable:before{
+    color: orange;
+    transform: rotate(-180deg);
   }
 
   .hm-comp-list{
     white-space: normal;
     position: relative;
     display: none;
+    opacity: 0.5;
   }
 
   .hm-comp-list:first-of-type{
     display: inline-block;
+    opacity: 1;
   }
 
   .hm-comp.open .hm-comp-list{
@@ -494,6 +509,18 @@
     left: 0px;
     line-height: 15px;
     text-overflow: ellipsis;
+  }
+
+  .hm-comp-name.expandable:before{
+    content: '▼';
+    display: inline-block;
+
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10px;
+    color: #999;
+    margin-right: 5px;
+    transition: all 0.2s;
   }
 
   @font-face{
