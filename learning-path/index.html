@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=EB+Garamond|Merriweather+Sans:800i&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="jquery-3.4.1.min.js"></script>
+  <title></title>
+  <script type="text/javascript">
+    $(function(){
+      $('.menu').click(function(){
+        $(this).toggleClass('open');
+      });
+
+      $('.edit').click(function(){
+        $('body').toggleClass('editing');
+      });
+
+      $('.module-intro button').click(function(){
+        $('.home').hide();
+        $('.page').show();
+      });
+
+      $('.tab-title').click(function(){
+        var idx = $('.tab-title').index(this);
+
+        $('.tab').removeClass('selected').eq(idx).addClass('selected');
+        $('.tab-title').removeClass('selected').eq(idx).addClass('selected');
+      });
+    });
+  </script>
+  <style type="text/css">
+    body{
+      width: 800px;
+      margin: auto;
+      font-family: sans-serif;
+
+      font-family: 'EB Garamond', serif;
+
+      color: #444;
+    }
+
+    .menu-panel{
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: white;
+      border: 1px solid #ddd;
+      display: none;
+      list-style-type: none;
+      padding: 0px;
+      margin: 0px;
+      z-index: 1;
+      padding-top: 40px;
+      border: 2px solid #ddd;
+      width: 150px;
+    }
+
+    .menu-panel hr{
+      margin: 0px;
+    }
+
+    .menu-panel li{
+      padding: 5px 10px;
+    }
+
+    .header{
+      line-height: 50px;
+
+    }
+
+    .header h1{
+      
+      margin: 0px;
+      padding: 0px;
+      line-height: inherit;
+      vertical-align: middle;
+
+      font-family: 'Merriweather Sans', sans-serif;
+    }
+
+
+    .menu{
+      line-height: normal;
+      white-space: nowrap;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+    }
+
+    .menu button{
+      
+      font-size: 25px;
+      line-height: 40px;
+      padding: 0px;
+      color: #99ccdd;
+      width: 40px;
+      text-align: left;
+      
+      border-radius: 100px;
+      outline: none;
+      cursor: pointer;
+      font-family: sans-serif;
+    }
+
+    .menu.open .menu-panel{
+      display: block;
+    }
+
+    .menu.open button{
+      z-index: 2;
+      position: relative;
+      text-align: center;
+    }
+
+    button{
+      line-height: inherit;
+      font-size: inherit;
+      font-family: inherit;
+      padding: 0px;
+      background: none;
+      border: none;
+    }
+
+    .nav-strip{
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+
+      margin-bottom: 20px;
+    }
+
+    button{
+      color: #999;
+      font-size: 20px;
+      font-family: 'Merriweather Sans', sans-serif;
+      
+    }
+
+    .nav-strip button.next{
+      border:   2px solid #99CCDD;
+      color: #99CCDD;
+      padding: 5px 10px;
+    }
+
+    .progress{
+      height: 5px;
+      background: #ddd;
+      width: calc( 100% - 40px );
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress:before{
+      content: "";
+      width: 70%;
+      height: 100%;
+      background: #99ccdd;
+      display: block;
+    }
+
+    .terminus{
+       background: #eee;
+       height: 10px;
+       width: 10px;
+       border-radius: 5px;
+       display: inline-block;
+       vertical-align: middle;
+    }
+
+    button.edit{
+      background-image: url('http://downloadicons.net/sites/default/files/edit-button-image-68871.png');
+      background-size: 60%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: white;
+      box-shadow: 0px 1px 5px rgba(0,0,0,0.8);
+      border-radius: 100px;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      opacity: 0.3;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .editing .editable{
+      outline: 2px dashed gray;
+    }
+
+    .objective-list{
+      border-left: 2px solid #99ccdd;
+      padding-left: 20px;
+    }
+
+    .instruction{
+      border-left: 2px solid orange;
+      padding-left: 20px;
+    }
+
+    .activity{
+      border-left: 2px solid purple;
+      padding-left: 20px;
+    }
+
+
+    .objective-list h2{
+      color: #99ccdd;
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: 0px;
+      margin-bottom: 10px;
+    }
+
+    .activity h2{
+      color: purple;
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .instruction p{
+      display: inline-block;
+
+      margin-top: 0px;
+    }
+
+    .activity button{
+      border: 2px solid purple;
+      color: purple;
+      padding: 5px 10px;
+    }
+
+    .instruction, .activity, .objective-list{
+      padding-top: 5px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .instruction:before, .activity:before, .objective-list:before{
+      content: "";
+      width: 30px;
+      height: 30px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 100%;
+      display: inline-block;
+      vertical-align: top;
+      margin-right: 10px;
+      margin-top: 0px;
+    }
+
+    .instruction:before{ background-image: url('./lightbulb.png'); }
+    .objective-list:before{ background-image: url('./checklist.png'); }
+    .activity:before{ background-image: url('./tick.png'); }
+
+    .module-intro{
+      background-size: cover;
+      background-position: center;
+      height: 300px;
+    }
+
+    .module-intro{
+      padding: 20px;
+      color: white;
+      box-sizing: border-box;
+    }
+
+    .module-intro h1{
+      margin: 0px;
+    }
+
+    .module-intro button{
+      border: 2px solid white;
+      color: white;
+      padding: 5px 10px;
+    }
+
+    .home{
+      margin-bottom: 20px;
+    }
+
+    .page{
+      display: none;
+    }
+
+    .tabs{
+      padding-left: 20px;
+      border-left: 2px solid #99ccdd;
+    }
+
+    .tab-title{
+      display: inline-block;
+      
+      padding-bottom: 5px;
+
+      color: #999;
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: 0px;
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
+    .tab{
+      display: none;
+
+    }
+
+    .tab.selected{
+      display: block;
+    }
+
+    .tab-title.selected{
+      
+      color: #99ccdd;
+    }
+
+    .content{
+      outline: none;
+    }
+
+    .quote{
+      color: #999;
+      text-align: center;
+    }
+
+    .quote-avatar{
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 50px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .quote-content{
+      display: inline-block;
+      width: 50%;
+      vertical-align: middle;
+      margin-left: 20px;
+      text-align: left;
+    }
+
+    .quote-credit{
+      color: #333;
+      display: block;
+    }
+
+
+
+
+
+  </style>
+</head>
+<body>
+  <div class='home'>
+    <h1><img style="width:150px;vertical-align:middle;" src='https://images.squarespace-cdn.com/content/5c8ee46690f90424c78fd2e5/1557258946901-U10QP3VPQT01PFSZT0HL/Screenshot+2019-05-07+15.55.31.png?content-type=image%2Fpng'/>A Profound History of Literary Things</h1>
+    <p>History (from Greek ἱστορία, historia, meaning 'inquiry; knowledge acquired by investigation') is the past as it is described in written documents, and the study thereof. Events occurring before written records are considered prehistory. "History" is an umbrella term that relates to past events as well as the memory, discovery, collection, organization, presentation, and interpretation of information about these events. Scholars who write about history are called historians.</p>
+    <div class='objective-list'>
+      <h2>Course Objectives</h2>
+      <li>First Learning Objective</li>
+      <li>Second Learning Objective</li>
+      <li>Third Learning Objective</li>
+    </div>
+    <p>History also includes the academic discipline which uses a narrative to examine and analyse a sequence of past events, and objectively determine the patterns of cause and effect that determine them. Historians sometimes debate the nature of history and its usefulness by discussing the study of the discipline as an end in itself and as a way of providing "perspective" on the problems of the present.</p>
+
+    <div class='instruction'>
+      <p>Choose a literary figure below to explore their contribution to literary history.</p>
+    </div>
+
+    <div class='module-intro' style='background-image: url("./module-bg.png")'>
+      <h1>Jorge Luis Borges</h1>
+      <p>Explore the story of this pioneer of the literary style known as magical realism.</p>
+      <button>Start ></button>
+    </div>
+
+    <div class='module-intro' style='background-image: url("./shakespeare.png")'>
+      <h1>Shakespeare's Hamlet</h1>
+      <p>Explore the the humanity and tragedy of Shakespeare's Hamlet.</p>
+      <button>Start ></button>
+    </div>
+  </div>
+  <div class='page'>
+  <div class='header'>
+    <div class='menu'>
+      <button>☰</button>
+      <ul class='menu-panel'>
+        <hr>
+        <li>Home</li>
+        <li>Dashboard</li>
+        <hr>
+        <li>Introduction</li>
+        <li>Second Page</li>
+        <li>Third Page</li>
+        <li>Fourth Page</li>
+      </ul>
+    </div><div class='progress'></div>
+  </div>
+  <h1 contenteditable class='editable'>Introduction</h1>
+  <div contenteditable class="content editable">
+    <p>What would it be like to have a limitless memory? Can the meaning of life be found in an infinite library? Is time a labyrinth or a single moment?</p>
+    <div class='objective-list'>
+      <h2>Learning Objectives for this Module</h2>
+      <li>First Learning Objective</li>
+      <li>Second Learning Objective</li>
+      <li>Third Learning Objective</li>
+    </div>
+    <p>Jorge Luis Borges explored these questions of infinity in his many works. His body of essays, poems and stories pioneered the literary style known as magical realism— and each was just a few pages long. Ilan Stavans dives into the world of Borges.</p>
+    <br><br>
+    <div class='quote'>
+      <div class='quote-avatar' style='background-image: url("https://images.gr-assets.com/authors/1550676691p5/4128.jpg")'></div>
+      <div class='quote-content'>
+      He, more than anyone, renovated the language of fiction and thus opened the way to a remarkable generation of Spanish American novelists.<span class='quote-credit'>Writer and essayist, J. M. Coetzee</span></div>
+    </div>
+    <br><br>
+    <div class='tabs'>
+      <div class='tab-title selected'>Early writing career</div>
+      <div class='tab-title'>International renown</div>
+      <div class='tab-title'>Later career</div>
+      <div class='tab selected'>
+        In 1921, Borges returned with his family to Buenos Aires. He had little formal education, no qualifications and few friends. He wrote to a friend that Buenos Aires was now "overrun by arrivistes, by correct youths lacking any mental equipment, and decorative young ladies". He brought with him the doctrine of Ultraism and launched his career, publishing surreal poems and essays in literary journals. Borges published his first published collection of poetry, Fervor de Buenos Aires, in 1923 and contributed to the avant-garde review Martín Fierro.
+      </div>
+      <div class='tab'>
+        Borges's father died in 1938, shortly before his 64th birthday. On Christmas Eve that year, Borges suffered a severe head injury; during treatment, he nearly died of sepsis. While recovering from the accident, Borges began exploring a new style of writing for which he would become famous. His first story written after his accident, "Pierre Menard, Author of the Quixote,” came out in May 1939. One of his most famous works, "Menard" examines the nature of authorship, as well as the relationship between an author and his historical context. His first collection of short stories, El jardín de senderos que se bifurcan (The Garden of Forking Paths), appeared in 1941, composed mostly of works previously published in Sur.
+      </div>
+      <div class='tab'>
+        Eight of Borges's poems appear in the 1943 anthology of Spanish American Poets by H.R. Hays.[30][Note 4] "The Garden of Forking Paths", one of the first Borges stories to be translated into English, appeared in the August 1948 issue of Ellery Queen's Mystery Magazine, translated by Anthony Boucher. Though several other Borges translations appeared in literary magazines and anthologies during the 1950s (and one story appeared in the science fiction magazine Fantastic Universe in 1960), his international fame dates from the early 1960s.
+      </div>
+    </div>
+    <br><br>
+    <div class='instruction'>
+      <p>Watch the video below. Pay careful attention and respond to the quiz that follows.</p>
+    </div>
+    <iframe width="100%" height="315" src="https://www.youtube.com/embed/mJeLGd3JV2I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    <div class='activity'>
+      <h2>Test Your Knowledge</h2>
+      <p>What did you learn? Let's test your knowledge.</p>
+      <button>Start ></button>
+    </div>
+  </div>
+  <div class='nav-strip'><button class='prev'>< Previous</button><button class='next'>Next ></button></div>
+  <button class='edit'></button>
+  </div>
+</body>
+</html>
