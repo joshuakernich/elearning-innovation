@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    .slide{
+      border: 1px solid #ddd;
+      margin: 10px;
+      padding: 0px 10px;
+    }
+
+    p{
+      margin-bottom: 10px;
+    }
+  </style>
+  <script type="text/javascript" src="./jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+
+    $(function(){
+
+      var ROOT = "http://www.uvm.edu/~92csicca/CME/CME1History_PH//";
+      var $xmlRels;
+      var $xmlStory;
+
+      function draw(){
+        $xmlStory.find("sldId").each(function(){
+          var $slide = $("<div class='slide'>").appendTo("body");
+          var $content = $("<div class='slide-content'>").appendTo($slide);
+          var $media = $("<div class='slide-media'>").appendTo($slide);
+
+          var target = $xmlRels.find("Relationship[Id="+$(this).text()+"]").attr('Target');
+      
+          $($content).load(ROOT+"../COM_CME1a"+target, function(responseTxt, statusTxt, xhr){
+            var xmlDoc = $.parseXML( responseTxt ); 
+            var $xml = $(xmlDoc);
+            var $plains = $xml.find("plain");
+
+            var str = '';
+            $plains.each(function(){
+              str += "<p>"+$(this).text()+"</p>";
+            })
+            $(this).html(str);
+            
+          });
+
+          $($media).load(ROOT+target.replace('slides','slides/_rels')+'.rels', function(responseTxt, statusTxt, xhr){
+            var xmlDoc = $.parseXML( responseTxt ); 
+            var $xml = $(xmlDoc);
+            var $medias = $xml.find("Relationship");
+
+            var str = '';
+
+            $medias.each(function(){
+              var target = $(this).attr("Target");
+              if(target.endsWith(".jpg") || target.endsWith(".png")){
+                str += "<img width=200 src="+ROOT+target+"/>";
+              } else if(target.endsWith(".mp3")){
+                str += '<audio controls><source src="'+ROOT+target+'" type="audio/mpeg"></audio>';
+              } else {
+                str += target;
+              }
+            });
+
+            $(this).html(str);
+          });
+        })
+      }
+
+      $("button").click(function(){
+        $(document).load(ROOT+"story/_rels/story.xml.rels", function(responseTxt, statusTxt, xhr){
+          if(statusTxt == "success"){
+   
+            var xml = responseTxt;
+            var xmlDoc = $.parseXML( xml ); 
+            $xmlRels = $(xmlDoc);
+
+            if($xmlStory) draw();
+
+          } else if(statusTxt == "error"){
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+          }
+        });
+
+        $(document).load(ROOT+"story/story.xml", function(responseTxt, statusTxt, xhr){
+          if(statusTxt == "success"){
+   
+            var xml = responseTxt;
+            var xmlDoc = $.parseXML( xml ); 
+            $xmlStory = $(xmlDoc);
+
+            if($xmlRels) draw();
+
+          } else if(statusTxt == "error"){
+            alert("Error: " + xhr.status + ": " + xhr.statusText);
+          }
+        });
+      });
+
+      
+    });
+    
+
+  </script>
+</head>
+<body>
+<button>LOAD</button>
+</body>
+</html>
