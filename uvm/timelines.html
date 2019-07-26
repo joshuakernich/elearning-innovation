@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    body{
+      white-space: nowrap;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .timeline{
+      display: inline-block;
+    }
+
+    li{
+      display: inline-block;
+      width: 100px;
+      border-left: 1px solid #bbb;
+      padding-left: 10px;
+      vertical-align: bottom;
+      margin-right: 20px;
+      white-space: normal;
+      padding-bottom: 10px;
+    }
+
+    h1{
+      font-size: 15px;
+      margin: 0px;
+      padding: 0px;
+      margin-bottom: 10px;
+      color: #bbb;
+    }
+
+    .timeline{
+      border-bottom: 1px solid #bbb;
+    }
+  </style>
+  <script type="text/javascript" src="../jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+    
+    $(function(){
+      const timelineA = [
+        {date:"~10,000 BCE",description:"Cannabis cultivation begins, including for food, ciber and sacramental and medicinal use."},
+        {date:"~1500 BC",description:"Cannabis arrives in Europe."},
+        {date:"100",description:"Cannabis is documented in first Herbals."},
+        {date:"~500",description:"Cannabis arrives in Africa."},
+        {date:"1545",description:"Cannabis arrives in the Americas from Chile for use as a fiber."},
+        {date:"1600",description:"Cannabis (hemp) production encouraged in United States."},
+        {date:"1753",description:"Carl Linnaeus, famous for his work in the science of identifying, naming and classifying organisms, classifies Cannabis sativa L."},
+        {date:"1851",description:"Cannabis added to US pharmacopeia, a reference collection for pharmaceutical drug specifications."},
+        {date: "1942",description:"Cannabis is dropped from US pharmacopeia."},
+        {date:"2011",description:"First Cannabis genome is sequenced, figuring out the order of an organism's DNA."},
+        {date:"2013",description:"American Herbal Pharmacopeia issues standards on Cannabis and restores classification as botanical medicine."},
+        ]
+        const timelineB = {
+        "1964":"Dr. Raphael Mechoulam and colleagues isolate THC, the active component of cannabis.",
+        "1985":"Scientists find that psychotropic cannabinoids have ability to inhibit key enzymes in the cells by acting through certain proteins.",
+        "1988":"Scientists discover Cannabinoid receptors CB1 and CB2.",
+        "1992":"Scientists discover endogenous cannabinoids, cannabinoids that originate within the system and bind to cannabinoid receptors affecting cognitive processes, such as appetite, memory, and pain sensation.",
+        }
+        const timelineC = {
+        "1800s":"Medicine is not regulated. Patients of all ages use cocaine, heroin and morphine for pain. ",
+        "1906":"The Pure Food and Drug Act passes which enforces labeling and quality control in medicine.",
+        "1914":"The Harrison Narcotics Act of 1914 passes which imposes taxes on the sale, distribution and manufacturing of cocoa leaves,opium and their derivatives.",
+        "1930":"The first Federal Bureau of Narcotics is formed and begins the criminalization and prohibition of drugs. By 1931, 29 states have outlawed Cannabis.",
+        "1934":"The Uniform State Narcotic Drug Act is passed, but the American Medical Association and pharmaceutical companies opposed the inclusion of Cannabis.",
+        "1937":"The Marijuana Tax Act passes in an attempt to regulate Cannabis for the first time.",
+        "1956":"The Boggs Act & Narcotics Control Act are passed, setting mandatory sentences for drug-related offenses, including Cannabis.",
+        "1970":"Controlled Substances Act passes, and Cannabis is temporarily designated as a Schedule 1 drug, the highest potential for abuse and no medicinal value.",
+        "1976":"Compassionate Investigational New Drug Program is created allowing a select amount of severely ill patients to receive Cannabis.",
+        "1996":"The Compassionate Use Act Initiative, or Prop 215, is passed, amending the California Constitution to allow the use of medical Cannabis."}
+
+        timelineA.forEach(function(epoch){
+          $("<li>").appendTo('.timeline').html('<h1>'+epoch.date+'</h1>'+epoch.description);
+        })
+    });
+
+  </script>
+</head>
+<body>
+<div class='timeline'></div>
+</body>
+</html>

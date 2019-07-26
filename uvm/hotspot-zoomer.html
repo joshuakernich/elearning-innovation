@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assembly Department</title>
+  <style type="text/css">
+    body{
+      padding: 0px;
+      margin: 0px;
+      overflow: hidden;
+      font-family: sans-serif;
+      font-size: 6px;
+    }
+
+    body.zoomed{
+      cursor: -moz-zoom-out; 
+      cursor: -webkit-zoom-out; 
+      cursor: zoom-out;
+    }
+
+    .zoomable{
+      transform-origin: top left;
+      display: inline-block;
+      position: absolute;
+
+    }
+
+    .hotspot-writeup{
+      width: 300px;
+
+      position: absolute;
+      box-sizing: border-box;
+      background: rgba(255,255,255,0.9);
+      padding: 20px;
+      border: 1px solid #ddd;
+      left: -150px;
+      top: -50px;
+      display: none;
+    }
+
+    .hotspot{
+      position: absolute;
+
+
+      cursor: -moz-zoom-in; 
+      cursor: -webkit-zoom-in; 
+      cursor: zoom-in;
+    }
+
+    .hotspot:after{
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      left: -25px;
+      top: -25px;
+      border: 1px solid orange;
+      border-radius: 100px;
+      background: rgba(250,250,250,0.1);
+    }
+
+    .hotspot h1{
+      font-size: 10px;
+      line-height: 20px;
+      position: absolute;
+      width: 100px;
+      top: -10px;
+
+      left: -50px;
+      display: inline-block;
+      text-align: center;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .zoomed .hotspot{
+      display: none;
+    }
+
+    .zoomed .hotspot.active{
+      display: block;
+    }
+
+  </style>
+  <script type="text/javascript" src="../jquery-3.4.1.min.js"></script>
+  <script type="text/javascript">
+    $( function(){
+
+        
+
+        var zoomed = false;
+        var zoomObject = {zoom:1};
+
+        //var type = location.hash.substr(1);
+        //$('img.'+type).show();
+
+        this.zoomTo = function(x,y,zoomTo){
+          
+          x = $(window).width()/2 - x*zoomTo;
+          y = $(window).height()/2 - y*zoomTo;
+
+          $('.zoomable').animate({left:x,top:y});
+
+          $(zoomObject).animate({zoom:zoomTo},{step:function(now){
+            $('.zoomable').css({transform:"scale("+now+")"});
+          }})
+        }
+
+        $('.hotspot').click(function(e){
+    
+
+          $('.hotspot').removeClass('active');
+          $(e.currentTarget).addClass('active');
+
+          if(!zoomed){
+            //captures the point we're actually zooming in to
+            zoomed = true;
+            $('body').addClass('zoomed');
+            focalX = (e.pageX - $('.zoomable').offset().left) * 1/zoomObject.zoom;
+            focalY = (e.pageY - $('.zoomable').offset().top) * 1/zoomObject.zoom;
+            this.zoomTo(focalX,focalY,2)
+          } else {
+            this.zoomToShowAll();
+          }
+
+        }.bind(this));
+
+
+        this.zoomToShowAll = function(){
+          zoomed = false;
+          $('body').removeClass('zoomed');
+          var focalX = $('.zoomable').width()/2;
+          var focalY = $('.zoomable').height()/2;
+          var w = $(window).width()/$('.zoomable').width();
+          var h = $(window).height()/$('.zoomable').height();
+          var scale = Math.min(w,h);
+          this.zoomTo(focalX,focalY,scale)
+        }
+
+        //try to initialize until the view is genuinely visible
+        var iInit = setInterval(function(){
+          if($('.zoomable').width()>0){
+            clearInterval(iInit);
+            this.zoomToShowAll();
+          }
+        }.bind(this),200);
+      });
+  </script>
+</head>
+<body>
+
+<div class='zoomable'>
+  <div class='leaf-explorer'>
+    <img style='width:300px' src='leaf.png'>
+    <div class='hotspot' style='left:150px;bottom:50px'>
+      <h1>Hemp</h1>
+      <div class='hotspot-writeup'>
+        <h2>Hemp/Marajuana</h2>
+        <p>Hemp refers to the fiber of the cannabis plant. The fibers are extracted from the stem and used to make rope, strong fabrics, fiberboard, and paper. You may have seen many hemp products, including clothing and plastic substitute products. Marajuana, on the other hand, refers to the psychoactive dried resinous flower buds and leaves of the female cannabis plant. Marajuana contains high levels of THC and is usually smoked, vaped, or ingested (as in baked goods).</p>
+      </div>
+    </div>
+    <div class='hotspot' style='left:50px;top:100px'>
+      <h1>Cannabanoids</h1>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
