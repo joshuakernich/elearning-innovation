@@ -53,25 +53,29 @@
         {date:"2011",description:"First Cannabis genome is sequenced, figuring out the order of an organism's DNA."},
         {date:"2013",description:"American Herbal Pharmacopeia issues standards on Cannabis and restores classification as botanical medicine."},
         ]
-        const timelineB = {
-        "1964":"Dr. Raphael Mechoulam and colleagues isolate THC, the active component of cannabis.",
-        "1985":"Scientists find that psychotropic cannabinoids have ability to inhibit key enzymes in the cells by acting through certain proteins.",
-        "1988":"Scientists discover Cannabinoid receptors CB1 and CB2.",
-        "1992":"Scientists discover endogenous cannabinoids, cannabinoids that originate within the system and bind to cannabinoid receptors affecting cognitive processes, such as appetite, memory, and pain sensation.",
-        }
-        const timelineC = {
-        "1800s":"Medicine is not regulated. Patients of all ages use cocaine, heroin and morphine for pain. ",
-        "1906":"The Pure Food and Drug Act passes which enforces labeling and quality control in medicine.",
-        "1914":"The Harrison Narcotics Act of 1914 passes which imposes taxes on the sale, distribution and manufacturing of cocoa leaves,opium and their derivatives.",
-        "1930":"The first Federal Bureau of Narcotics is formed and begins the criminalization and prohibition of drugs. By 1931, 29 states have outlawed Cannabis.",
-        "1934":"The Uniform State Narcotic Drug Act is passed, but the American Medical Association and pharmaceutical companies opposed the inclusion of Cannabis.",
-        "1937":"The Marijuana Tax Act passes in an attempt to regulate Cannabis for the first time.",
-        "1956":"The Boggs Act & Narcotics Control Act are passed, setting mandatory sentences for drug-related offenses, including Cannabis.",
-        "1970":"Controlled Substances Act passes, and Cannabis is temporarily designated as a Schedule 1 drug, the highest potential for abuse and no medicinal value.",
-        "1976":"Compassionate Investigational New Drug Program is created allowing a select amount of severely ill patients to receive Cannabis.",
-        "1996":"The Compassionate Use Act Initiative, or Prop 215, is passed, amending the California Constitution to allow the use of medical Cannabis."}
+        const timelineB = [
+        {date:"1964",description:"Dr. Raphael Mechoulam and colleagues isolate THC, the active component of cannabis."},
+        {date:"1985",description:"Scientists find that psychotropic cannabinoids have ability to inhibit key enzymes in the cells by acting through certain proteins."},
+        {date:"1988",description:"Scientists discover Cannabinoid receptors CB1 and CB2."},
+        {date:"1992",description:"Scientists discover endogenous cannabinoids, cannabinoids that originate within the system and bind to cannabinoid receptors affecting cognitive processes, such as appetite, memory, and pain sensation."},
+        ]
+        const timelineC = [
+        {date:"1800s",description:"Medicine is not regulated. Patients of all ages use cocaine, heroin and morphine for pain."},
+        {date:"1906",description:"The Pure Food and Drug Act passes which enforces labeling and quality control in medicine."},
+        {date:"1914",description:"The Harrison Narcotics Act of 1914 passes which imposes taxes on the sale, distribution and manufacturing of cocoa leaves,opium and their derivatives."},
+        {date:"1930",description:"The first Federal Bureau of Narcotics is formed and begins the criminalization and prohibition of drugs. By 1931, 29 states have outlawed Cannabis."},
+        {date:"1934",description:"The Uniform State Narcotic Drug Act is passed, but the American Medical Association and pharmaceutical companies opposed the inclusion of Cannabis."},
+        {date:"1937",description:"The Marijuana Tax Act passes in an attempt to regulate Cannabis for the first time."},
+        {date:"1956",description:"The Boggs Act & Narcotics Control Act are passed, setting mandatory sentences for drug-related offenses, including Cannabis."},
+        {date:"1970",description:"Controlled Substances Act passes, and Cannabis is temporarily designated as a Schedule 1 drug, the highest potential for abuse and no medicinal value."},
+        {date:"1976",description:"Compassionate Investigational New Drug Program is created allowing a select amount of severely ill patients to receive Cannabis."},
+        {date:"1996",description:"The Compassionate Use Act Initiative, or Prop 215, is passed, amending the California Constitution to allow the use of medical Cannabis."}
+        ]
 
-        timelineA.forEach(function(epoch){
+        const timelines = [timelineA,timelineB,timelineC];
+        const timeline = timelines[window.location.href.split('?')[1]];
+
+        timeline.forEach(function(epoch){
           $("<li>").appendTo('.timeline').html('<h1>'+epoch.date+'</h1>'+epoch.description);
         })
     });
