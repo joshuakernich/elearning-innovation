@@ -76,7 +76,7 @@
         const timeline = timelines[window.location.href.split('?')[1]];
 
         timeline.forEach(function(epoch){
-          $("<li>").appendTo('.timeline').html('<h1>'+epoch.date+'</h1>'+epoch.description);
+          $("<li>").appendTo('.timeline').html('<h1>'+epoch.date+'</h1><p>'+epoch.description+'</p>');
         })
     });
 
