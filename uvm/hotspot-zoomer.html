@@ -3,12 +3,29 @@
 <head>
   <title>Assembly Department</title>
   <style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Assistant|Roboto|Roboto+Slab&display=swap');
+
     body{
       padding: 0px;
       margin: 0px;
       overflow: hidden;
-      font-family: sans-serif;
+      font-family: 'Assistant', sans-serif;
       font-size: 6px;
+      color: #333;
+
+    }
+
+    .hotspot-writeup img{
+      float: left;
+      max-width: 30%;
+      max-height: 100px;
+      margin-right: 20px;
+    }
+
+    h1,h2,h3,h4{
+      font-family: 'Roboto Slab';
+      color: #7ABC1B;
+      margin: 0px;
     }
 
     body.zoomed{
@@ -38,6 +55,7 @@
       bottom: 20px;
       display: none;
       font-size: 15px;
+      border-left: 4px solid #7ABC1B;
     }
 
     .hotspot{
@@ -49,16 +67,16 @@
       cursor: zoom-in;
     }
 
-    .hotspot:after{
+    .hotspot:before{
       content: "";
       position: absolute;
       width: 50px;
       height: 50px;
       left: -25px;
       top: -25px;
-      border: 1px solid orange;
+      border: 1px solid #7ABC1B;
       border-radius: 100px;
-      background: rgba(250,250,250,0.1);
+      background: rgba(250,250,250,0.5);
     }
 
     .hotspot h1{
@@ -73,6 +91,7 @@
       text-align: center;
       margin: 0px;
       padding: 0px;
+      color: #333;
     }
 
     .zoomed .hotspot{
@@ -173,17 +192,41 @@
     <div class='hotspot' style='left:50px;top:100px'>
       <h1>Cannabanoids</h1>
     </div>
-
+     <div class='hotspot' style='right:50px;top:100px'>
+      <h1>Terpenes</h1>
+    </div>
+    <div class='hotspot' style='left:150px;top:150px'>
+      <h1>eCBD</h1>
+    </div>
   </div>
 
 </div>
 <div class='hotspot-writeup'>
-  <h2>Hemp/Marajuana</h2>
-  <p>Hemp refers to the fiber of the cannabis plant. The fibers are extracted from the stem and used to make rope, strong fabrics, fiberboard, and paper. You may have seen many hemp products, including clothing and plastic substitute products. Marajuana, on the other hand, refers to the psychoactive dried resinous flower buds and leaves of the female cannabis plant. Marajuana contains high levels of THC and is usually smoked, vaped, or ingested (as in baked goods).</p>
+  <h2>Hemp/Marijuana</h2>
+
+  <div>
+  <img src='hemp.png'><p>Hemp refers to the fiber of the cannabis plant. The fibers are extracted from the stem and used to make rope, strong fabrics, fiberboard, and paper. You may have seen many hemp products, including clothing and plastic substitute products. Marijuana, on the other hand, refers to the psychoactive dried resinous flower buds and leaves of the female cannabis plant. Marijuana contains high levels of THC and is usually smoked, vaped, or ingested (as in baked goods).</p></div>
 </div>
 <div class="hotspot-writeup">
-  <h2></h2>
+  <h2>Cannabinoids</h2>
+  <p>The cannabis plant contains hundreds of compounds called <b>cannabinoids</b>, each of which affects the body differently.</p>
+  <div style="">
+  <img src='thc.png'><p>Cannabinoids are delta-9-tetrahydrocannabinol, or THC, is responsible for the plants notorious psychoactive sensation</p></div>
+  <div style='clear:both;'>
+    <br>
+  <img src='cbd.png'><p>Cannabidiol, or CBD, has therapeutic properties but does not produce a psychoactive “high”.</p> 
 </div>
+</div>
+<div class='hotspot-writeup'>
+  <h2>Terpenes</h2>
+  <div>
+  <img src='terpenes.png'>
+  <p>Terpenes are aromatic oils that color cannabis varieties with distinctive flavors like citrus, berry, mint, and pine. Over 100 different terpenes have been identified in the Cannabis plant, and every strain tends toward a unique terpene type and composition. </p></div>
+</div>
+<div class='hotspot-writeup'>
+<h2>The endocannabinoid system (eCBD)</h2>
+<div><img src='thc-cbd.png'><p>The eCB system is a series of cannabinoid receptors located on cell membranes throughout the body. CB1 receptors are primarily found in the brain and central nervous systems. CB2 receptors are mainly found in peripheral organs, especially cells associated with the immune system. If you think of the receptors as locks, CBD and THC fit like a key into the cannabinoid receptors.</p><p>While CBD does not fit directly into the CB1 and CB2 receptors, studies are looking into the its indirect effects.</p></div>
 
+</div>
 </body>
 </html>

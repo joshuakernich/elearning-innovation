@@ -18,7 +18,7 @@
 
     $(function(){
 
-      var ROOT = "http://www.uvm.edu/~92csicca/CME/CME1History_PH//";
+      var ROOT = "../COM_CME1a/";
       var $xmlRels;
       var $xmlStory;
 
@@ -30,7 +30,7 @@
 
           var target = $xmlRels.find("Relationship[Id="+$(this).text()+"]").attr('Target');
       
-          $($content).load(ROOT+"../COM_CME1a"+target, function(responseTxt, statusTxt, xhr){
+          $($content).load(ROOT+target, function(responseTxt, statusTxt, xhr){
             var xmlDoc = $.parseXML( responseTxt ); 
             var $xml = $(xmlDoc);
             var $plains = $xml.find("plain");
