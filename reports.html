@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src='./jquery-3.4.1.min.js'></script>
+  <script type="text/javascript">
+    $(function(){
+      $('.competency-list li').each(function(){
+        var $comp = $(this);
+        $('.student-list li').each(function(){
+          var $g = $('<div class="grade">').appendTo($comp);
+          if(Math.random()>0.8) $g.addClass('incomplete');
+          if(Math.random()>0.8) $g.addClass('good');
+          if(Math.random()>0.9) $g.addClass('bad');
+          if(Math.random()>0.9) $g.addClass('worse');
+        });
+      });
+
+      $('.activity-list li').each(function(){
+        var $comp = $(this);
+        $('.student-list li').each(function(){
+          var $g = $('<div class="grade">').appendTo($comp);
+          if(Math.random()>0.8) $g.addClass('good');
+          if(Math.random()>0.9) $g.addClass('bad');
+          if(Math.random()>0.9) $g.addClass('worse');
+        });
+      });
+
+      $('button').click(function(){
+        var idx = $('button').index(this);
+        $('button').removeClass('selected').eq(idx).addClass('selected');
+        $('.data-list').removeClass('active').eq(idx).addClass('active');
+      })
+    });
+
+    
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow&display=swap');
+
+    body{
+      font-family: 'PT Sans Narrow', sans-serif;
+      color: #333;
+      text-align: center;
+    }
+
+    .grade{
+      display: block;
+      width: 40px;
+      height: 35px;
+      margin-bottom: 5px;
+      background: #eee;
+      position: relative;
+      border-radius: 5px;
+    }
+
+    .grade:after{
+      content: "";
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      margin: auto;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      border-radius: 5px;
+    }
+
+    .grade.incomplete:after{
+      width: 30%;
+      height: 30%;
+    }
+
+    .grade.good:after{
+      background: #7DD874;
+    }
+
+    .grade.bad:after{
+      background: #F89E4F;
+    }
+
+    .grade.worse:after{
+      background: #E7483A;
+    }
+
+
+
+    ul{
+      display: inline-block;
+
+      
+      font-size: 14px;
+      list-style-type: none;
+      vertical-align: top;
+      margin: 0px;
+      padding: 0px;
+    }
+
+
+
+    li{
+      line-height: 40px;
+    }
+
+    .tooltip{
+      display: none;
+    }
+
+    button{
+      font-family: inherit;
+      font-size: inherit;
+      padding: 15px 20px 10px 20px;
+      margin: 0px;
+      border: none;
+      background: #eee;
+      margin-right: 5px;
+      border-bottom: 5px solid transparent;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .student-list{
+      text-align: right;
+      padding-top: 40px;
+      margin-right: 10px;
+    }
+
+    button.selected{
+      border-color: orange;
+    }
+
+    .grid{
+      margin-top: 20px;
+    }
+
+    .competency-list li, .activity-list li{
+      display: inline-block;
+      width: 40px;
+      text-align: center;
+    }
+
+    .data-list{
+      display: none;
+    }
+
+    .data-list.active{
+      display: inline-block;
+    }
+
+    .key-list{
+      display: inline-block;
+      padding: 40px;
+      text-align: left;
+    }
+
+    .key-list .grade{
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+
+  </style>
+</head>
+<body>
+  <button class='selected'>Program Outcomes</button><button>Course Outcomes</button><button>Learning Objectives</button><button>Activities</button>
+  <div class='grid'>
+  <ul class='student-list'>
+    <li>Adam Adamson</li>
+    <li>Ben Benson</li>
+    <li>Caleb Calebson</li>
+    <li>Danny Dannyson</li>
+    <li>Edward Edwards</li>
+    <li>Faye Farington</li>
+    <li>Gary Garrison</li>
+    <li>Harry Harrison</li>
+    <li>Idris Idrington</li>
+    <li>James Jameson</li>
+  </ul>
+  <ul class='data-list competency-list active'>
+    <li>PC1<span class='tooltip'>Utilize industrial automation with robotics to improve an existing industrial production process</span></li>
+    <li>PC2<span class='tooltip'>Apply the principles of engineering and mechatronics to identify and design robotics automation solutions</span></li>
+    <li>PC3<span class='tooltip'>Appraise the business considerations of industrial automation</span></li>
+    <li>PC4<span class='tooltip'>Assess the human and social effects of implementing a robotics solution</span></li>
+</ul>
+<ul class='data-list competency-list'>
+  <li>CO1<span class='tooltip'>Determine suitability for robotics in a given scenario</span></li>
+  <li>CO2<span class='tooltip'>Identify the cultural impact of robotics in a given company</span></li>
+  <li>CO3<span class='tooltip'>Determine type and functionality of robot/automation needed in a given scenario</span></li>
+  <li>CO4<span class='tooltip'>Identify technologies related to implementing a robotics solution in a given scenario</span></li>
+  <li>CO5<span class='tooltip'>Assess economic factors associated with automation</span></li>
+  <li>CO6<span class='tooltip'>Identify safety issues to be considered when introducing robotics in manufacturing</span></li>
+</ul>
+<ul class='data-list competency-list'>
+  <li>LO1<span class='tooltip'>Review documentation to identify appropriate lines of inquiry for informed-decision making</span></li>
+  <li>LO2<span class='tooltip'>Discuss findings based on the companies goals, constraints and budget</span></li>
+  <li>LO3<span class='tooltip'>Assess suitability for robotics by evaluating numerous situational factors</span></li>
+</ul>
+<ul class='data-list activity-list'>
+  <li>1<span class='tooltip'></span></li>
+  <li>2<span class='tooltip'></span></li>
+  <li>3<span class='tooltip'></span></li>
+  <li>4<span class='tooltip'></span></li>
+  <li>5<span class='tooltip'></span></li>
+</ul>
+<ul class='key-list'>
+  <li><div class='grade good'></div> Competent</li>
+  <li><div class='grade bad'></div> Marginal</li>
+  <li><div class='grade worse'></div> Failed</li>
+  <li><div class='grade incomplete good'></div> Approaching Competency</li>
+  <li><div class='grade incomplete bad'></div> Struggling</li>
+  <li><div class='grade incomplete worse'></div> Doing Very Badly</li>
+  <li><div class='grade'></div> Not Started</li>
+</ul>
+</div>
+</body>
+</html>
