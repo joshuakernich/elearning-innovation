@@ -9,10 +9,15 @@
         var $comp = $(this);
         $('.student-list li').each(function(){
           var $g = $('<div class="grade">').appendTo($comp);
-          if(Math.random()>0.8) $g.addClass('incomplete');
+          if(Math.random()>0.7) $g.addClass('incomplete');
+            
           if(Math.random()>0.8) $g.addClass('good');
-          if(Math.random()>0.9) $g.addClass('bad');
           if(Math.random()>0.9) $g.addClass('worse');
+
+          if(Math.random()>0.8) $g.addClass('good');
+          if(Math.random()>0.9) $g.addClass('worse');
+          
+          
         });
       });
 
@@ -21,8 +26,8 @@
         $('.student-list li').each(function(){
           var $g = $('<div class="grade">').appendTo($comp);
           if(Math.random()>0.8) $g.addClass('good');
-          if(Math.random()>0.9) $g.addClass('bad');
           if(Math.random()>0.9) $g.addClass('worse');
+          if(Math.random()>0.9) $g.addClass('ungraded');
         });
       });
 
@@ -30,6 +35,10 @@
         var idx = $('button').index(this);
         $('button').removeClass('selected').eq(idx).addClass('selected');
         $('.data-list').removeClass('active').eq(idx).addClass('active');
+
+        $('.key-list').removeClass('active');
+        if(idx == 3) $('.key-list.for-activities').addClass('active');
+        else $('.key-list.for-skills').addClass('active');
       })
     });
 
@@ -83,6 +92,10 @@
 
     .grade.worse:after{
       background: #E7483A;
+    }
+
+    .grade.ungraded:after{
+      background: #7D74D8;
     }
 
 
@@ -145,7 +158,7 @@
       display: none;
     }
 
-    .data-list.active{
+    .data-list.active, .key-list.active{
       display: inline-block;
     }
 
@@ -153,6 +166,7 @@
       display: inline-block;
       padding: 40px;
       text-align: left;
+      display: none;
     }
 
     .key-list .grade{
@@ -165,7 +179,7 @@
   </style>
 </head>
 <body>
-  <button class='selected'>Program Outcomes</button><button>Course Outcomes</button><button>Learning Objectives</button><button>Activities</button>
+  <button class='selected'>Program Skills</button><button>Course Skills</button><button>Learning Objectives</button><button>Activities</button>
   <div class='grid'>
   <ul class='student-list'>
     <li>Adam Adamson</li>
@@ -180,18 +194,18 @@
     <li>James Jameson</li>
   </ul>
   <ul class='data-list competency-list active'>
-    <li>PC1<span class='tooltip'>Utilize industrial automation with robotics to improve an existing industrial production process</span></li>
-    <li>PC2<span class='tooltip'>Apply the principles of engineering and mechatronics to identify and design robotics automation solutions</span></li>
-    <li>PC3<span class='tooltip'>Appraise the business considerations of industrial automation</span></li>
-    <li>PC4<span class='tooltip'>Assess the human and social effects of implementing a robotics solution</span></li>
+    <li>PS1<span class='tooltip'>Utilize industrial automation with robotics to improve an existing industrial production process</span></li>
+    <li>PS2<span class='tooltip'>Apply the principles of engineering and mechatronics to identify and design robotics automation solutions</span></li>
+    <li>PS3<span class='tooltip'>Appraise the business considerations of industrial automation</span></li>
+    <li>PS4<span class='tooltip'>Assess the human and social effects of implementing a robotics solution</span></li>
 </ul>
 <ul class='data-list competency-list'>
-  <li>CO1<span class='tooltip'>Determine suitability for robotics in a given scenario</span></li>
-  <li>CO2<span class='tooltip'>Identify the cultural impact of robotics in a given company</span></li>
-  <li>CO3<span class='tooltip'>Determine type and functionality of robot/automation needed in a given scenario</span></li>
-  <li>CO4<span class='tooltip'>Identify technologies related to implementing a robotics solution in a given scenario</span></li>
-  <li>CO5<span class='tooltip'>Assess economic factors associated with automation</span></li>
-  <li>CO6<span class='tooltip'>Identify safety issues to be considered when introducing robotics in manufacturing</span></li>
+  <li>CS1<span class='tooltip'>Determine suitability for robotics in a given scenario</span></li>
+  <li>CS2<span class='tooltip'>Identify the cultural impact of robotics in a given company</span></li>
+  <li>CS3<span class='tooltip'>Determine type and functionality of robot/automation needed in a given scenario</span></li>
+  <li>CS4<span class='tooltip'>Identify technologies related to implementing a robotics solution in a given scenario</span></li>
+  <li>CS5<span class='tooltip'>Assess economic factors associated with automation</span></li>
+  <li>CS6<span class='tooltip'>Identify safety issues to be considered when introducing robotics in manufacturing</span></li>
 </ul>
 <ul class='data-list competency-list'>
   <li>LO1<span class='tooltip'>Review documentation to identify appropriate lines of inquiry for informed-decision making</span></li>
@@ -205,14 +219,18 @@
   <li>4<span class='tooltip'></span></li>
   <li>5<span class='tooltip'></span></li>
 </ul>
-<ul class='key-list'>
-  <li><div class='grade good'></div> Competent</li>
-  <li><div class='grade bad'></div> Marginal</li>
-  <li><div class='grade worse'></div> Failed</li>
-  <li><div class='grade incomplete good'></div> Approaching Competency</li>
-  <li><div class='grade incomplete bad'></div> Struggling</li>
-  <li><div class='grade incomplete worse'></div> Doing Very Badly</li>
+<ul class='key-list for-skills active'>
+  <li><div class='grade good'></div> Skill Met</li>
+  <li><div class='grade worse'></div> Skill Failed</li>
+  <li><div class='grade incomplete good'></div> Performing Well</li>
+  <li><div class='grade incomplete worse'></div> Struggling</li>
   <li><div class='grade'></div> Not Started</li>
+</ul>
+<ul class='key-list for-activities'>
+  <li><div class='grade good'></div> Pass</li>
+  <li><div class='grade worse'></div> Fail</li>
+  <li><div class='grade ungraded'></div> Grading Required</li>
+  <li><div class='grade'></div> Not Attempted</li>
 </ul>
 </div>
 </body>
